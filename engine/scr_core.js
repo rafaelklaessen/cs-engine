@@ -139,6 +139,10 @@ cs.Obj = function(options) {
    return this
 }
 
+cs.Obj.prototype.setLive = function(isLive) {
+   this.live = isLive
+}
+
 cs.Obj.prototype.destroy = function() {
    var type = this.type
    this.live = false
@@ -166,7 +170,7 @@ cs.obj = {
       } else {
          for (var obj of cs.obj.list) {
             if (obj.id === destroyObj) {
-               obj.live = false
+               obj.setLive(false)
                var type = obj.type
             }
          }
@@ -331,13 +335,20 @@ cs.Sprite.prototype.info = function(options) {
    }
 }
 
+cs.Sprite.prototype.getInfo = cs.Sprite.prototype.info
+
+cs.Sprite.prototype.draw = function(options) {
+   options.spr = this.getName()
+   cs.draw.sprite(options)
+}
+
 cs.sprite = {
    list: {},
    texture: function(spriteName, width, height) {
       this.list[options.spr].texture(width, height)
    },
    info: function(options) {
-      return this.list[options.spr].info(options)
+      return this.list[options.spr].getInfo(options)
    },
    getSprite: function(spriteName) {
       return this.list[spriteName]
@@ -424,10 +435,10 @@ cs.draw = {
       for (var surface of this.surfaceOrder) {
          if (surface.autoClear || surface.clearRequest) {
             clearRect = {
-               x: surface.raw ? 0 : cs.camera.x,
-               y: surface.raw ? 0 : cs.camera.y,
-               width: surface.raw ? surface.canvas.width : cs.camera.width,
-               height: surface.raw ? surface.canvas.height : cs.camera.height,
+               x: surface.raw ? 0 : cs.camera.getX(),
+               y: surface.raw ? 0 : cs.camera.getY(),
+               width: surface.raw ? surface.canvas.width : cs.camera.getWidth(),
+               height: surface.raw ? surface.canvas.height : cs.camera.getHeight(),
             }
             if (surface.clearRequest) clearRect = surface.clearRequest
             surface.ctx.clearRect(clearRect.x, clearRect.y, clearRect.width, clearRect.height)
@@ -453,20 +464,20 @@ cs.draw = {
    },
    displaySurface: function(surfaceName) {
       var surface = this.surfaces[surfaceName]
-      sx = surface.raw ? 0 : cs.camera.x,
-      sy = surface.raw ? 0 : cs.camera.y,
-      sWidth = surface.raw ? surface.canvas.width : cs.camera.width,
-      sHeight = surface.raw ? surface.canvas.height : cs.camera.height,
+      sx = surface.raw ? 0 : cs.camera.getX(),
+      sy = surface.raw ? 0 : cs.camera.getY(),
+      sWidth = surface.raw ? surface.canvas.width : cs.camera.getWidth(),
+      sHeight = surface.raw ? surface.canvas.height : cs.camera.getHeight(),
 
       // We will have to scale the X over becuse safari doesnt act like chrome
-      dx = sx < 0 ? Math.floor(cs.camera.scale*(cs.camera.x*-1)) : 0,
-      dy = sy < 0 ? Math.floor(cs.camera.scale*(cs.camera.y*-1)) : 0,
+      dx = sx < 0 ? Math.floor(cs.camera.getScale() * (cs.camera.getX() * -1)) : 0,
+      dy = sy < 0 ? Math.floor(cs.camera.getScale() * (cs.camera.getY() * -1)) : 0,
       dWidth = sWidth <= surface.canvas.width
          ? cs.view.width
-         : cs.view.width - Math.floor(cs.camera.scale*((cs.camera.width)-surface.canvas.width)),
+         : cs.view.width - Math.floor(cs.camera.getScale() * ((cs.camera.getWidth()) - surface.canvas.width)),
       dHeight = sHeight <= surface.canvas.height
          ? cs.view.height
-         : cs.view.height - Math.floor(cs.camera.scale*((cs.camera.height)-surface.canvas.height))
+         : cs.view.height - Math.floor(cs.camera.getScale() * ((cs.camera.getHeight()) - surface.canvas.height))
 
       if (sx < 0) sx = 0; sWidth += sx * -1
       if (sy < 0) sy = 0; sHeight += sy * -1
@@ -484,7 +495,9 @@ cs.draw = {
    },
    checkResize: function() {
       var rect = cs.view.getBoundingClientRect()
-      var w = rect.width; var h = rect.height; var o = screen.orientation
+      var w = rect.width
+      var h = rect.height
+      var o = screen.orientation
       if (w !== cs.draw.w || h !== cs.draw.h || o !== cs.draw.o) {
           cs.draw.w = w
           cs.draw.h = h
@@ -501,10 +514,10 @@ cs.draw = {
       var ratioHeight = w / h // How many h = w
       var ratioWidth = h / w // how man w = a h
 
-      var nw = cs.camera.maxWidth - (cs.camera.maxWidth % ratioWidth)
+      var nw = cs.camera.getMaxWidth() - (cs.camera.getMaxWidth() % ratioWidth)
       var nh = nw * ratioWidth
-      if (nh >= cs.camera.maxHeight) {
-         nh = cs.camera.maxHeight - (cs.camera.maxHeight % ratioHeight)
+      if (nh >= cs.camera.getMaxHeight()) {
+         nh = cs.camera.getMaxHeight() - (cs.camera.getMaxHeight() % ratioHeight)
          nw = nh * ratioHeight
       }
       cs.view.width = w
@@ -513,25 +526,25 @@ cs.draw = {
 
       for (var surface of this.surfaceOrder) {
          var img = surface.ctx.getImageData(0, 0, surface.canvas.width, surface.canvas.height)
-         surface.canvas.width = surface.raw ? w : cs.room.width
-         surface.canvas.height = surface.raw ? h : cs.room.height
+         surface.canvas.width = surface.raw ? w : cs.room.getWidth()
+         surface.canvas.height = surface.raw ? h : cs.room.getHeight()
          surface.ctx.putImageData(img, 0, 0)
          this.ctxImageSmoothing(surface.ctx)
       }
 
-      cs.camera.width = Math.ceil(nw)
-      cs.camera.height = Math.ceil(nh)
-      cs.camera.scale = w / nw
+      cs.camera.setWidth(Math.ceil(nw))
+      cs.camera.setHeight(Math.ceil(nh))
+      cs.camera.setScale(w / nw)
    },
    sprite: function(options) {
-      sprite = cs.sprite.list[options.spr]
-      var info = sprite.info(options)
+      var sprite = cs.sprite.getSprite(options.spr)
+      var info = sprite.getInfo(options)
 
       this.debug.drawnSprites++
       if (!this.raw && !this.skip) {
          // If outside camera skip
-         if (options.x+sprite.getFwidth() < cs.camera.x || options.x  > cs.camera.x+cs.camera.width
-         || options.y+sprite.getFheight() < cs.camera.y || options.y  > cs.camera.y+cs.camera.height) {
+         if (options.x + sprite.getFwidth() < cs.camera.getX() || options.x  > cs.camera.getX() + cs.camera.getWidth()
+         || options.y + sprite.getFheight() < cs.camera.getY() || options.y  > cs.camera.getY() + cs.camera.getHeight()) {
             this.debug.skippedSprites++
             return
          }
@@ -540,7 +553,7 @@ cs.draw = {
       this.ctx.save()
       this.ctx.translate(Math.floor(options.x), Math.floor(options.y))
       this.ctx.rotate(options.angle * Math.PI/180)
-      this.ctx.scale(info.scaleX+0.001, info.scaleY+0.001)
+      this.ctx.scale(info.scaleX + 0.001, info.scaleY + 0.001)
       this.ctx.drawImage(sprite.getFrames()[info.frame], -sprite.getXoff(), -sprite.getYoff())
       this.ctx.restore()
 
@@ -558,8 +571,8 @@ cs.draw = {
       var cy = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
 
       this.ctx.beginPath()
-      this.ctx.moveTo(options.x1-cx,options.y1-cy)
-      this.ctx.lineTo(options.x2-cx,options.y2-cy)
+      this.ctx.moveTo(options.x1 - cx, options.y1 - cy)
+      this.ctx.lineTo(options.x2 - cx, options.y2 - cy)
       this.ctx.stroke()
       cs.draw.reset()
    },
@@ -567,12 +580,12 @@ cs.draw = {
       if (typeof args.width == 'undefined') args.width = args.size || 0
       if (typeof args.height == 'undefined') args.height = args.size || 0
 
-      this.ctx.fillRect(args.x,args.y,args.width,args.height)
+      this.ctx.fillRect(args.x, args.y, args.width, args.height)
       cs.draw.reset()
    },
    strokeRect: function(args) {
       var lineWidth = this.ctx.lineWidth > 1 ? this.ctx.lineWidth : 0
-      var lineWidthAdjust = (this.ctx.lineWidth % 2 ? -0.50 : 0) + Math.floor(this.ctx.lineWidth/2)
+      var lineWidthAdjust = (this.ctx.lineWidth % 2 ? -0.50 : 0) + Math.floor(this.ctx.lineWidth / 2)
       var rect = {
          x: args.x + lineWidthAdjust,
          y: args.y + lineWidthAdjust,
@@ -585,7 +598,7 @@ cs.draw = {
    circle: function(x, y, rad, fill) {
       if (typeof fill == 'undefined') fill = true
       cs.draw.ctx.beginPath()
-      cs.draw.ctx.arc(x, y, rad, 0, Math.PI*2, true)
+      cs.draw.ctx.arc(x, y, rad, 0, Math.PI * 2, true)
       cs.draw.ctx.closePath()
       (fill)
           ? cs.draw.ctx.fill()
@@ -599,7 +612,7 @@ cs.draw = {
       g.addColorStop(0, c1)
       this.ctx.fillStyle = g
       this.ctx.beginPath()
-      this.ctx.arc(x, y, radius, 0, Math.PI*2, true)
+      this.ctx.arc(x, y, radius, 0, Math.PI * 2, true)
       this.ctx.closePath()
       // Fill
       this.ctx.fill()
@@ -610,7 +623,7 @@ cs.draw = {
       width = Math.floor(args.width)
       height = Math.floor(args.height)
 
-      return { x:x, y:y, width:width, height:height }
+      return { x, y, width, height }
    },
    setColor: function(color) {
       this.ctx.fillStyle = color
@@ -629,7 +642,7 @@ cs.draw = {
       this.ctx.textAlign = alignment
    },
    setTextBaseline: function(alignment) {
-      this.ctx.textBaseline=alignment
+      this.ctx.textBaseline = alignment
    },
    setTextCenter: function() {
       this.setTextAlign('center')
@@ -670,6 +683,62 @@ cs.Camera = function(options) {
    this.maxHeight = options.maxHeight || this.height
 }
 
+cs.Camera.prototype.setScale = function(scale) {
+   this.scale = scale
+}
+
+cs.Camera.prototype.getScale = function() {
+   return this.scale
+}
+
+cs.Camera.prototype.setX = function(x) {
+   this.x = x
+}
+
+cs.Camera.prototype.getX = function() {
+   return this.x
+}
+
+cs.Camera.prototype.setY = function(y) {
+   this.y = y
+}
+
+cs.Camera.prototype.getY = function() {
+   return this.y
+}
+
+cs.Camera.prototype.setWidth = function(width) {
+   this.width = width
+}
+
+cs.Camera.prototype.getWidth = function() {
+   return this.width;
+}
+
+cs.Camera.prototype.setHeight = function(height) {
+   this.height = height
+}
+
+cs.Camera.prototype.getHeight = function() {
+   return this.height
+}
+
+cs.Camera.prototype.setMaxWidth = function(maxWidth) {
+   this.maxWidth = maxWidth
+}
+
+cs.Camera.prototype.getMaxWidth = function() {
+   return this.maxWidth
+}
+
+cs.Camera.prototype.setMaxHeight = function(maxHeight) {
+   this.maxHeight = maxHeight
+}
+
+cs.Camera.prototype.getMaxHeight = function() {
+   return this.maxHeight
+}
+
 cs.Camera.prototype.follow = function(obj) {
    this.followX = obj.x
    this.followY = obj.y
@@ -684,13 +753,13 @@ cs.Camera.prototype.update = function() {
    if (this.x < 0) this.x = 0
    if (this.y < 0) this.y = 0
 
-   if (this.x+this.width > cs.room.width)
-      this.x = (cs.room.width - this.width) / (cs.room.width < this.width ? 2 : 1)
+   if (this.x+this.width > cs.room.getWidth())
+      this.x = (cs.room.getWidth() - this.width) / (cs.room.getWidth() < this.width ? 2 : 1)
 
-   if (this.y + this.height > cs.room.height)
-      this.y = (cs.room.height - this.height) / (cs.room.height < this.height ? 2 : 1)
+   if (this.y + this.height > cs.room.getHeight())
+      this.y = (cs.room.getHeight() - this.height) / (cs.room.getHeight() < this.height ? 2 : 1)
 
-   // console.log(cs.room.height-cs.camera.height)
+   // console.log(cs.room.getHeight()-cs.camera.getHeight())
 }
 
 cs.Camera.prototype.zoomOut = function() {}
@@ -704,6 +773,18 @@ cs.Room = function(info) {
    this.height = info.height || 400
    cs.draw.background = info.background || '#000'
    this.rect = {x: 0, y: 0, width: this.width, height: this.height}
+}
+
+cs.Room.prototype.getWidth = function() {
+   return this.width
+}
+
+cs.Room.prototype.getHeight = function() {
+   return this.height
+}
+
+cs.Room.prototype.setRestarting = function(isRestarting) {
+   this.restarting = isRestarting
 }
 
 cs.Room.prototype.restart = function() {
@@ -1029,10 +1110,10 @@ cs.touch = {
       var physicalViewHeight = (rect.bottom-rect.top)
       var hortPercent = (x - rect.left)/physicalViewWidth
       var vertPercent = (y - rect.top)/physicalViewHeight
-      var gamex = Math.round(hortPercent*cs.camera.width)
-      var gamey = Math.round(vertPercent*cs.camera.height)
-      gamex = (gamex) + cs.camera.x
-      gamey = (gamey) + cs.camera.y
+      var gamex = Math.round(hortPercent * cs.camera.getWidth())
+      var gamey = Math.round(vertPercent * cs.camera.getHeight())
+      gamex = (gamex) + cs.camera.getX()
+      gamey = (gamey) + cs.camera.getY()
       return { x: gamex, y: gamey }
    }
 }
@@ -1128,8 +1209,8 @@ cs.sound = {
          alert('Web Audio API is not supported in this browser')
       }
    },
-   play: function(audioName, options) {
-      return this.list[audioName].play()
+   getSound: function(name) {
+      return this.list[name]
    },
    addSound: function(sound) {
       this.list[sound.getName()] = sound

@@ -58,7 +58,7 @@ cs.objects['obj_bird'] = {
 		//Check for touch
 		if(cs.global.flap){
 			this.vspeed = -5;
-			cs.sound.play('flap');
+			cs.sound.getSound('flap').play()
 			cs.global.flap = false;
 			if(this.diving > 24){
 				cs.global.score += 1;
@@ -66,7 +66,7 @@ cs.objects['obj_bird'] = {
 					new cs.Obj({ type:'obj_score_text', x:this.x, y:this.y })
 				)
 				cs.particle.burst(this.x, this.y, this.width, 0, 10);
-				cs.sound.play('score');
+				cs.sound.getSound('score').play()
 			}
 			this.diving = 0;
 		}
@@ -106,7 +106,7 @@ cs.objects['obj_bird'] = {
 		if(collisionScore){
 			cs.obj.destroy(collisionScore);
 			cs.global.score += 1;
-			cs.sound.play('score');
+			cs.sound.getSound('score').play()
 		}
 	}
 }

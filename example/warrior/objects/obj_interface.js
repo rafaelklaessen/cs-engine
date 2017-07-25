@@ -1,7 +1,9 @@
 cs.objects['obj_interface'] = {
     create: function(){
-        cs.obj.create({ type: 'obj_joystick', x:0, y:0 })
-        cs.obj.create({ type:'obj_buttons', x:0, y:0 })
+       cs.obj.addObjs([
+          new cs.Obj({ type: 'obj_joystick', x:0, y:0 }),
+          new cs.Obj({ type:'obj_buttons', x:0, y:0 })
+       ])
     },
     step: function(){
 
@@ -99,7 +101,7 @@ cs.objects['obj_joystick'] = {
       cs.draw.fillRect({ x:this.x, y:this.y, width:this.width, height:this.height });
       cs.draw.setColor('#fff');
       cs.draw.strokeRect({ x:this.tx, y:this.ty, width:this.jw, height:this.jh });
-      
+
       cs.draw.text(1, 0, 'FPS Step: ' + cs.fps.rate);
       cs.draw.text(1, 30, 'Scale: ' + cs.camera.scale);
 

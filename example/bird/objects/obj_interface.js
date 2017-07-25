@@ -37,7 +37,7 @@ cs.objects['obj_interface'] = {
                break;
             case 'TAPTOFLAP':
                if(!this.backgroundPlaying)
-            		this.backgroundPlaying = cs.sound.play('background', { loop: true });
+            		this.backgroundPlaying = cs.sound.getSound('background').play({ loop: true });
 					cs.script.interface.drawButtons(['Tap to flap!', 'Your Best Score: ' + cs.save.topScore])
                 if(this.touch.down){
                     cs.save.state = 'PLAYING'

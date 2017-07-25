@@ -23,37 +23,44 @@
 		<canvas id="view"></canvas>
 
 		<script>
+			var room = new cs.Room({
+				width: 192,
+				height: 192,
+				background: "#222"
+			})
+			var camera = new cs.Camera({
+				maxWidth:300,
+				maxHeight:200
+			})
+
 			//Initialize the view
-			cs.init('view');
+			cs.init('view', room, camera);
 
 			//Load Sprites
-			cs.sprite.load({ path: 'sprites/spr_block' })
-			cs.sprite.load({ path: 'sprites/spr_head' })
-			cs.sprite.load({ path: 'sprites/spr_body' })
-			cs.sprite.load({ path: 'sprites/spr_hand' })
-			cs.sprite.load({ path: 'sprites/spr_foot' })
-			cs.sprite.load({ path: 'sprites/spr_sword', xoff: 4, yoff: 18 })
-			cs.sprite.load({ path: 'sprites/spr_shield' })
-			cs.sprite.load({ path: 'sprites/spr_blob' })
-			cs.sprite.load({ path: 'sprites/bg_wall', fwidth: 192, fheight: 1000, texture: true })
+			cs.sprite.addSprites([
+				new cs.Sprite({ path: 'sprites/spr_block' }),
+				new cs.Sprite({ path: 'sprites/spr_head' }),
+				new cs.Sprite({ path: 'sprites/spr_body' }),
+				new cs.Sprite({ path: 'sprites/spr_hand' }),
+				new cs.Sprite({ path: 'sprites/spr_foot' }),
+				new cs.Sprite({ path: 'sprites/spr_sword', xoff: 4, yoff: 18 }),
+				new cs.Sprite({ path: 'sprites/spr_shield' }),
+				new cs.Sprite({ path: 'sprites/spr_blob' }),
+				new cs.Sprite({ path: 'sprites/bg_wall', fwidth: 192, fheight: 1000, texture: true })
+			])
 
 			cs.start = function(){
-				cs.room.setup({
-					width: 192,
-					height: 192,
-					background: "#222"
-				})
-				cs.camera.setup({
-					maxWidth:300,
-					maxHeight:200
-				})
-
 				//Create Objects
-				cs.obj.create({ type:'obj_player', x:50, y:50 })
-				cs.obj.create({ type:'obj_blob', x:50, y:1 })
-				cs.obj.create({ type:'obj_interface', x:50, y:1 })
-				for(var i = 0; i < 12; i++)
-					cs.obj.create({ type:'obj_block', x:i*16, y:cs.room.height-16 })
+				cs.obj.addObjs([
+					new cs.Obj({ type:'obj_player', x:50, y:50 }),
+					new cs.Obj({ type:'obj_blob', x:50, y:1 }),
+					new cs.Obj({ type:'obj_interface', x:50, y:1 })
+				])
+				for(var i = 0; i < 12; i++) {
+					cs.obj.addObj(
+						new cs.Obj({ type:'obj_block', x:i*16, y:cs.room.height-16 })
+					)
+				}
 			}
 		</script>
 	</body>
