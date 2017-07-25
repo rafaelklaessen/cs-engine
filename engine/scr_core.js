@@ -183,112 +183,152 @@ cs.obj = {
 // ---------------------------------------------------------------------------------------------//
 // -----------------------------------| Sprite Functions |--------------------------------------//
 // ---------------------------------------------------------------------------------------------//
+cs.Sprite = function(options) {
+   cs.loading++
+   this.name = options.path.split('/').pop()
+
+   // Set up
+   this.img = new Image()
+   this.img.src = options.path + '.png'
+   this.img.frames = []
+
+   // Frame Width/Height/Tile
+   this.img.texture = options.texture
+   this.img.frames = options.frames || 1
+   this.img.fwidth = options.fwidth | 0
+   this.img.fheight = options.fheight || 0
+   this.img.xoff = options.xoff || 0
+   this.img.yoff = options.yoff || 0
+
+   this.img.onload = function() {
+      // Set up
+      if (this.fwidth == 0) {
+         this.fwidth = this.width
+      }
+      if (this.fheight == 0) {
+         this.fheight = this.height
+      }
+
+      // Create Frames
+      this.frames = []
+      var dx = 0, dy = 0
+      while (dx < this.width && dy < this.height) {
+         var frame = {}
+         frame.canvas = document.createElement('canvas')
+         frame.canvas.width = this.fwidth
+         frame.canvas.height = this.fheight
+         frame.canvas.ctx = frame.canvas.getContext('2d')
+
+         frame.canvas.ctx.drawImage(this, dx, dy, this.fwidth, this.fheight,
+            0, 0, this.fwidth, this.fheight)
+         this.frames.push(frame.canvas)
+         dx += this.fwidth
+         if (dx === this.width) {
+            dx = 0, dy+= this.fwidth
+         }
+      }
+
+      for (var surface of cs.draw.surfaceOrder) {
+         surface.clear = false
+      }
+
+      // Sprites Loaded Start Engine
+      cs.loading -= 1
+      if (cs.loading == 0) {
+         cs.start()
+      }
+   }
+}
+
+cs.Sprite.prototype.getName = function() {
+   return this.name
+}
+
+cs.Sprite.prototype.getFrames = function() {
+   return this.img.frames
+}
+
+cs.Sprite.prototype.getFwidth = function() {
+   return this.img.fwidth
+}
+
+cs.Sprite.prototype.getFheight = function() {
+   return this.img.fheight
+}
+
+cs.Sprite.prototype.getXoff = function() {
+   return this.img.xoff
+}
+
+cs.Sprite.prototype.getYoff = function() {
+   return this.img.yoff
+}
+
+cs.Sprite.prototype.texture = function(width, height) {
+   this.img.frames[0].width = width
+   this.img.frames[0].height = height
+   this.img.fwidth = width
+   this.img.fheight = height
+   this.img.frames[0].ctx.clearRect(0, 0, width, height)
+   var x = 0
+   while (x < width) {
+      var y = 0
+      while (y < height) {
+         this.frames[0].ctx.drawImage(sprite, x, y)
+         y += this.height
+      }
+      x += this.width
+   }
+}
+
+cs.Sprite.prototype.info = function(options) {
+   // We need something to return info on sprites based on scale etc
+   if (typeof options.frame == 'undefined') options.frame = 0
+   if (typeof options.scaleX == 'undefined') options.scaleX = 1
+   if (typeof options.scaleY == 'undefined') options.scaleY = 1
+   if (options.scale) {
+      options.scaleX = options.scale
+      options.scaleY = options.scale
+   }
+   // Scaling with width/height
+   if (options.width) {
+      options.scaleX = options.width / this.fwidth
+   }
+   if (options.height) {
+      options.scaleY = options.height / this.fheight
+   }
+
+   // Locking aspect ratio
+   if (options.aspectLock) {
+      (options.scaleX !== 1)
+         ? options.scaleY = options.scaleX
+         : options.scaleX = options.scaleY
+   }
+
+   return {
+      width: this.img.fwidth * options.scaleX,
+      height: this.img.fheight * options.scaleY,
+      scaleX: options.scaleX,
+      scaleY: options.scaleY,
+      frames: this.img.frames,
+      frame: options.frame
+   }
+}
+
 cs.sprite = {
    list: {},
-   load: function(options) {
-      cs.loading++
-      var sprName = options.path.split('/').pop()
-
-      // Set up
-      cs.sprite.list[sprName] = new Image()
-      cs.sprite.list[sprName].src = options.path + '.png'
-      cs.sprite.list[sprName].frames = []
-
-      // Frame Width/Height/Tile
-      cs.sprite.list[sprName].texture = options.texture
-      cs.sprite.list[sprName].frames = options.frames || 1
-      cs.sprite.list[sprName].fwidth = options.fwidth || 0
-      cs.sprite.list[sprName].fheight = options.fheight || 0
-      cs.sprite.list[sprName].xoff = options.xoff || 0
-      cs.sprite.list[sprName].yoff = options.yoff || 0
-
-      var that = this
-      cs.sprite.list[sprName].onload = function() {
-         // Set up
-         if (this.fwidth == 0)
-            this.fwidth = this.width
-         if (this.fheight == 0)
-            this.fheight = this.height
-
-         // Create Frames
-         this.frames = []
-         var dx = 0, dy = 0
-         while (dx < this.width && dy < this.height) {
-            var frame = {}
-            frame.canvas = document.createElement('canvas')
-            frame.canvas.width = this.fwidth
-            frame.canvas.height = this.fheight
-            frame.canvas.ctx = frame.canvas.getContext('2d')
-
-            frame.canvas.ctx.drawImage(this, dx, dy, this.fwidth, this.fheight,
-               0, 0, this.fwidth, this.fheight)
-            this.frames.push(frame.canvas)
-            dx += this.fwidth
-            if (dx === this.width) {
-               dx = 0, dy+= this.fwidth
-            }
-         }
-
-         for (var surface of cs.draw.surfaceOrder) {
-            surface.clear = false
-         }
-
-         // Sprites Loaded Start Engine
-         cs.loading -= 1
-         if (cs.loading == 0) {
-            cs.start()
-         }
-      }
-   },
    texture: function(spriteName, width, height) {
-      var sprite = cs.sprite.list[spriteName]
-      sprite.frames[0].width = width
-      sprite.frames[0].height = height
-      sprite.fwidth = width
-      sprite.fheight = height
-      sprite.frames[0].ctx.clearRect(0, 0, width, height)
-      var x = 0
-      while (x < width) {
-         var y = 0
-         while (y < height) {
-            sprite.frames[0].ctx.drawImage(sprite, x, y)
-            y += sprite.height
-         }
-         x += sprite.width
-      }
+      this.list[options.spr].texture(width, height)
    },
    info: function(options) {
-      // We need something to return info on sprites based on scale etc
-      if (typeof options.frame == 'undefined') options.frame = 0
-      if (typeof options.scaleX == 'undefined') options.scaleX = 1
-      if (typeof options.scaleY == 'undefined') options.scaleY = 1
-      var sprite = this.list[options.spr]
-      if (options.scale) {
-         options.scaleX = options.scale
-         options.scaleY = options.scale
-      }
-      // Scaling with width/height
-      if (options.width) {
-         options.scaleX = options.width/sprite.fwidth
-      }
-      if (options.height) {
-         options.scaleY = options.height/sprite.fheight
-      }
-
-      // Locking aspect ratio
-      if (options.aspectLock) {
-         (options.scaleX !== 1)
-            ? options.scaleY = options.scaleX
-            : options.scaleX = options.scaleY
-      }
-
-      return {
-         width: sprite.fwidth * options.scaleX,
-         height: sprite.fheight * options.scaleY,
-         scaleX: options.scaleX,
-         scaleY: options.scaleY,
-         frames: sprite.frames,
-         frame: options.frame
+      return this.list[options.spr].info(options)
+   },
+   addSprite: function(sprite) {
+      this.list[sprite.getName()] = sprite
+   },
+   addSprites: function(spriteArr) {
+      for (sprite of spriteArr) {
+         this.addSprite(sprite)
       }
    }
 }
@@ -466,13 +506,13 @@ cs.draw = {
    },
    sprite: function(options) {
       sprite = cs.sprite.list[options.spr]
-      var info = cs.sprite.info(options)
+      var info = sprite.info(options)
 
       this.debug.drawnSprites++
       if (!this.raw && !this.skip) {
          // If outside camera skip
-         if (options.x+sprite.fwidth < cs.camera.x || options.x  > cs.camera.x+cs.camera.width
-         || options.y+sprite.fheight < cs.camera.y || options.y  > cs.camera.y+cs.camera.height) {
+         if (options.x+sprite.getFwidth() < cs.camera.x || options.x  > cs.camera.x+cs.camera.width
+         || options.y+sprite.getFheight() < cs.camera.y || options.y  > cs.camera.y+cs.camera.height) {
             this.debug.skippedSprites++
             return
          }
@@ -482,7 +522,7 @@ cs.draw = {
       this.ctx.translate(Math.floor(options.x), Math.floor(options.y))
       this.ctx.rotate(options.angle * Math.PI/180)
       this.ctx.scale(info.scaleX+0.001, info.scaleY+0.001)
-      this.ctx.drawImage(sprite.frames[info.frame], -sprite.xoff, -sprite.yoff)
+      this.ctx.drawImage(sprite.getFrames()[info.frame], -sprite.getXoff(), -sprite.getYoff())
       this.ctx.restore()
 
       cs.draw.reset()

@@ -28,18 +28,20 @@
 			cs.init('view');
 
 			//Load Sprites
-			cs.sprite.load({ path:'sprites/bird', xoff:8, yoff:7})
-			cs.sprite.load({ path:'sprites/bird2', xoff:8, yoff:7})
-			cs.sprite.load({ path:'sprites/pipe_down' })
-			cs.sprite.load({ path:'sprites/pipe_up' })
-			cs.sprite.load({ path:'sprites/pipe_up' })
-			cs.sprite.load({ path:'sprites/cloud1' })
-			cs.sprite.load({ path:'sprites/cloud2' })
-			cs.sprite.load({ path:'sprites/cloud3' })
-			cs.sprite.load({ path:'sprites/mountain1' })
-			cs.sprite.load({ path:'sprites/mountain2' })
-			cs.sprite.load({ path:'sprites/sound_on' })
-			cs.sprite.load({ path:'sprites/sound_off' })
+			cs.sprite.addSprites([
+				new cs.Sprite({ path:'sprites/bird', xoff:8, yoff:7}),
+				new cs.Sprite({ path:'sprites/bird2', xoff:8, yoff:7}),
+				new cs.Sprite({ path:'sprites/pipe_down' }),
+				new cs.Sprite({ path:'sprites/pipe_up' }),
+				new cs.Sprite({ path:'sprites/pipe_up' }),
+				new cs.Sprite({ path:'sprites/cloud1' }),
+				new cs.Sprite({ path:'sprites/cloud2' }),
+				new cs.Sprite({ path:'sprites/cloud3' }),
+				new cs.Sprite({ path:'sprites/mountain1' }),
+				new cs.Sprite({ path:'sprites/mountain2' }),
+				new cs.Sprite({ path:'sprites/sound_on' }),
+				new cs.Sprite({ path:'sprites/sound_off' })
+			])
 
 			//Load Sounds
 			cs.sound.load({path:'sounds/flap'});
