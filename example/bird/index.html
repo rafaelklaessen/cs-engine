@@ -24,6 +24,21 @@
 		<!--Game Area-->
 		<canvas id="view"></canvas>
 		<script>
+			//Room Setup
+			var room = new cs.Room({
+				width: 800,
+				height: 256,
+				background: '#87cefa'
+			})
+			var camera = new cs.Camera({
+				maxWidth:800,
+				maxHeight:256,
+				lock: true
+			})
+
+			//Initialize the view
+			cs.init('view', room, camera);
+
 			//Load Sprites
 			cs.sprite.addSprites([
 				new cs.Sprite({ path:'sprites/bird', xoff:8, yoff:7}),
@@ -46,21 +61,6 @@
 				new cs.Sound({path:'sounds/background'}),
 				new cs.Sound({path:'sounds/score'})
 			])
-
-			//Room Setup
-			var room = new cs.Room({
-				width: 800,
-				height: 256,
-				background: '#87cefa'
-			})
-			var camera = new cs.Camera({
-				maxWidth:800,
-				maxHeight:256,
-				lock: true
-			})
-
-			//Initialize the view
-			cs.init('view', room, camera);
 
 			//Start game
          cs.save = { topScore: 0, state: 'START' }

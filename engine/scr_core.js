@@ -29,7 +29,7 @@ cs.fps = {
 // ---------------------------------------------------------------------------------------------//
 // ----------------------------------| Global Functions |---------------------------------------//
 // ---------------------------------------------------------------------------------------------//
-cs.init = function(canvasId) {
+cs.init = function(canvasId, room, camera) {
    // Listen for Errors
    window.onerror = function(errorMsg, url, lineNumber) { cs.loop.run = false }
 
@@ -47,6 +47,9 @@ cs.init = function(canvasId) {
    cs.view.addEventListener('touchcancel', cs.touch.up, false)
    cs.view.addEventListener('touchmove', cs.touch.move, false)
    cs.input.create()
+
+   cs.room = room
+   cs.camera = camera
 
    // View, Game and GUI surfaces
    cs.draw.createSurface({ name: 'gui', raw: true, zIndex: 100 })
@@ -642,47 +645,43 @@ cs.draw = {
 // ---------------------------------------------------------------------------------------------//
 // ----------------------------------| Camera Functions |---------------------------------------//
 // ---------------------------------------------------------------------------------------------//
-cs.camera = {
-   scale: 1,
-   x: 0,
-   y: 0,
-   followX: 0,
-   followY: 0,
-   width: 500,
-   maxWidth: 500,
-   height: 200,
-   maxHeight: 400,
-   setup: function(options) {
-      this.width = options.width
-      this.height = options.height
-      this.maxWidth = options.maxWidth || this.width
-      this.maxHeight = options.maxHeight || this.height
-      cs.draw.resize()
-   },
-   follow: function(obj) {
-      this.followX = obj.x
-      this.followY = obj.y
-      this.followWidth = obj.width
-      this.followHeight = obj.height
-   },
-   update: function() {
-      this.x = (this.followX + this.followWidth / 2) - this.width / 2
-      this.y = (this.followY + this.followHeight / 2) - this.height / 2
-
-      if (this.x < 0) this.x = 0
-      if (this.y < 0) this.y = 0
-
-      if (this.x+this.width > cs.room.width)
-         this.x = (cs.room.width - this.width) / (cs.room.width < this.width ? 2 : 1)
-
-      if (this.y + this.height > cs.room.height)
-         this.y = (cs.room.height - this.height) / (cs.room.height < this.height ? 2 : 1)
-
-      // console.log(cs.room.height-cs.camera.height)
-   },
-   zoomOut: function() {},
-   zoomIn: function() {}
+cs.Camera = function(options) {
+   this.scale = 1
+   this.x = 0
+   this.y = 0
+   this.followX = 0
+   this.followY = 0
+   this.width = options.width || 200
+   this.height = options.height || 400
+   this.maxWidth = options.maxWidth || this.width
+   this.maxHeight = options.maxHeight || this.height
 }
+
+cs.Camera.prototype.follow = function(obj) {
+   this.followX = obj.x
+   this.followY = obj.y
+   this.followWidth = obj.width
+   this.followHeight = obj.height
+}
+
+cs.Camera.prototype.update = function() {
+   this.x = (this.followX + this.followWidth / 2) - this.width / 2
+   this.y = (this.followY + this.followHeight / 2) - this.height / 2
+
+   if (this.x < 0) this.x = 0
+   if (this.y < 0) this.y = 0
+
+   if (this.x+this.width > cs.room.width)
+      this.x = (cs.room.width - this.width) / (cs.room.width < this.width ? 2 : 1)
+
+   if (this.y + this.height > cs.room.height)
+      this.y = (cs.room.height - this.height) / (cs.room.height < this.height ? 2 : 1)
+
+   // console.log(cs.room.height-cs.camera.height)
+}
+
+cs.Camera.prototype.zoomOut = function() {}
+cs.Camera.prototype.zoomIn = function() {}
 // ---------------------------------------------------------------------------------------------//
 // -----------------------------------| Room Functions |----------------------------------------//
 // ---------------------------------------------------------------------------------------------//
@@ -706,39 +705,12 @@ cs.Room.prototype.reset = function() {
    this.restarting = false
 }
 
-cs.Room.prototype.outside = function() {
+cs.Room.prototype.outside = function(rect) {
    if (typeof rect.width == 'undefined') rect.width = 0
    if (typeof rect.height == 'undefined') rect.height = 0
 
    return (rect.x < 0 || rect.x + rect.width > this.width
         || rect.y < 0 || rect.y + rect.height > this.height)
-}
-
-cs.room = {
-   width: 1000,
-   height: 400,
-   transition: false,
-   restart: function() { this.restarting = true },
-   reset: function() {
-      cs.obj.list = []
-      cs.global = {}
-      cs.start()
-      cs.sound.reset()
-      this.restarting = false
-   },
-   setup: function(info) {
-      this.width = info.width; this.height = info.height
-      cs.draw.background = info.background || '#000'
-      this.rect = {x: 0, y: 0, width: this.width, height: this.height}
-      cs.draw.resize()
-   },
-   outside(rect) {
-      if (typeof rect.width == 'undefined') rect.width = 0
-      if (typeof rect.height == 'undefined') rect.height = 0
-
-      return (rect.x < 0 || rect.x + rect.width > this.width
-           || rect.y < 0 || rect.y + rect.height > this.height)
-   }
 }
 // ---------------------------------------------------------------------------------------------//
 // ------------------------------| Text Input Functions |---------------------------------------//
