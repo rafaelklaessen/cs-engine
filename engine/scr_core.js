@@ -1,14 +1,14 @@
 //Name Space
-var cs = {};
+var cs = {}
 //---------------------------------------------------------------------------------------------//
 //-----------------------------| Global Variables and Scripts |--------------------------------//
 //---------------------------------------------------------------------------------------------//
-cs.global = {};
-cs.script = {};
-cs.save = {};
-cs.objects = {};
-cs.sprites = {};
-cs.loading = 0;
+cs.global = {}
+cs.script = {}
+cs.save = {}
+cs.objects = {}
+cs.sprites = {}
+cs.loading = 0
 //---------------------------------------------------------------------------------------------//
 //--------------------------------| Performance Monitoring |-----------------------------------//
 //---------------------------------------------------------------------------------------------//
@@ -18,11 +18,11 @@ cs.fps = {
     check : Date.now(),
     update : function(){
         if(Date.now() - this.check > 1000){
-            this.check = Date.now();
-            this.rate = this.frame;
-            this.frame = 0;
+            this.check = Date.now()
+            this.rate = this.frame
+            this.frame = 0
         } else {
-            this.frame += 1;
+            this.frame += 1
         }
     },
 }
@@ -37,32 +37,32 @@ cs.init = function(canvasId){
    cs.view = document.getElementById(canvasId)
    cs.view.ctx = cs.view.getContext('2d')
    cs.view.tabIndex = 1000
-   cs.view.addEventListener('keydown', cs.key.updateDown);
-   cs.view.addEventListener('keyup', cs.key.updateUp);
-   cs.view.addEventListener('mousemove', cs.mouse.move);
-   cs.view.addEventListener('mousedown', cs.mouse.down);
-   cs.view.addEventListener('mouseup', cs.mouse.up);
-   cs.view.addEventListener("touchstart", cs.touch.down, false);
-   cs.view.addEventListener("touchend", cs.touch.up, false);
-   cs.view.addEventListener("touchcancel", cs.touch.up, false);
-   cs.view.addEventListener("touchmove", cs.touch.move, false);
-   cs.input.create();
+   cs.view.addEventListener('keydown', cs.key.updateDown)
+   cs.view.addEventListener('keyup', cs.key.updateUp)
+   cs.view.addEventListener('mousemove', cs.mouse.move)
+   cs.view.addEventListener('mousedown', cs.mouse.down)
+   cs.view.addEventListener('mouseup', cs.mouse.up)
+   cs.view.addEventListener("touchstart", cs.touch.down, false)
+   cs.view.addEventListener("touchend", cs.touch.up, false)
+   cs.view.addEventListener("touchcancel", cs.touch.up, false)
+   cs.view.addEventListener("touchmove", cs.touch.move, false)
+   cs.input.create()
 
    //View, Game and GUI surfaces
    cs.draw.createSurface({ name: 'gui', raw: true, zIndex: 100 })
    cs.draw.createSurface({ name: 'game', raw: false })
 
    //Camera/View Size
-   cs.draw.resize();
-   cs.input.resize();
+   cs.draw.resize()
+   cs.input.resize()
 
    //Sound
-   cs.sound.active = cs.sound.init();
+   cs.sound.active = cs.sound.init()
    window.onfocus = function(){ cs.sound.toggleActive(true) }
    window.onblur = function(){ cs.sound.toggleActive(false) }
 
    //Start your engines!
-   cs.loop.step();
+   cs.loop.step()
 }
 cs.loop = {
    run : true,
@@ -76,15 +76,16 @@ cs.loop = {
       cs.camera.update()
       cs.draw.clearSurfaces()
 
-      var i = cs.obj.list.length; while(i--){
+      var i = cs.obj.list.length
+      while(i--){
          if(cs.obj.list[i].live){
-            var obj = cs.obj.list[i];
-            cs.draw.setSurface(obj.surface);
+            var obj = cs.obj.list[i]
+            cs.draw.setSurface(obj.surface)
 
-            cs.particle.settings = obj.particle.settings;
-            cs.particle.obj = obj;
-            var step = cs.objects[obj.type].step;
-            step.call(obj);
+            cs.particle.settings = obj.particle.settings
+            cs.particle.obj = obj
+            var step = cs.objects[obj.type].step
+            step.call(obj)
          }
       }
 
@@ -129,7 +130,7 @@ cs.obj = {
          sprite: object.sprite,
       }
       //Run Create event
-      object.create.call(newObj);
+      object.create.call(newObj)
 
       //Add the object to the list
       this.list.splice(pos, 0, newObj)
@@ -183,8 +184,8 @@ cs.obj = {
 cs.sprite = {
    list: {},
    load: function(options){
-      cs.loading += 1;
-      var sprName = options.path.split('/').pop();
+      cs.loading += 1
+      var sprName = options.path.split('/').pop()
 
       //Set up
       cs.sprite.list[sprName] = new Image()
@@ -379,7 +380,7 @@ cs.draw = {
       }
    },
    displaySurfaces : function(){
-      var i = this.surfaceOrder.length;
+      var i = this.surfaceOrder.length
       while(i--){
          this.displaySurface(this.surfaceOrder[i].name)
       }
@@ -416,7 +417,7 @@ cs.draw = {
    },
    checkResize: function(){
       var rect = cs.view.getBoundingClientRect()
-      var w = rect.width; var h = rect.height; var o = screen.orientation;
+      var w = rect.width; var h = rect.height; var o = screen.orientation
       if(w !== cs.draw.w || h !== cs.draw.h || o !== cs.draw.o){
           cs.draw.w = w
           cs.draw.h = h
@@ -433,11 +434,11 @@ cs.draw = {
       var ratioHeight = w/h //How many h = w
       var ratioWidth = h/w //how man w = a h
 
-      var nw = cs.camera.maxWidth - (cs.camera.maxWidth%ratioWidth);
-      var nh = nw * ratioWidth;
+      var nw = cs.camera.maxWidth - (cs.camera.maxWidth%ratioWidth)
+      var nh = nw * ratioWidth
       if(nh >= cs.camera.maxHeight){
-         nh = cs.camera.maxHeight - (cs.camera.maxHeight%ratioHeight);
-         nw = nh * ratioHeight;
+         nh = cs.camera.maxHeight - (cs.camera.maxHeight%ratioHeight)
+         nw = nh * ratioHeight
       }
       cs.view.width = w
       cs.view.height = h
@@ -465,11 +466,11 @@ cs.draw = {
          if(options.x+sprite.fwidth < cs.camera.x || options.x  > cs.camera.x+cs.camera.width
          || options.y+sprite.fheight < cs.camera.y || options.y  > cs.camera.y+cs.camera.height ){
             this.debug.skippedSprites += 1
-            return;
+            return
          }
       }
 
-      this.ctx.save();
+      this.ctx.save()
       this.ctx.translate(Math.floor(options.x), Math.floor(options.y))
       this.ctx.rotate(options.angle * Math.PI/180)
       this.ctx.scale(info.scaleX+0.001, info.scaleY+0.001)
@@ -479,7 +480,7 @@ cs.draw = {
       cs.draw.reset()
    },
    text: function(options){
-      this.ctx.fillText(options.text, options.x, options.y);
+      this.ctx.fillText(options.text, options.x, options.y)
       cs.draw.reset()
    },
    textSize: function(str){
@@ -489,18 +490,18 @@ cs.draw = {
       var cx = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
       var cy = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
 
-      this.ctx.beginPath();
-      this.ctx.moveTo(options.x1-cx,options.y1-cy);
-      this.ctx.lineTo(options.x2-cx,options.y2-cy);
-      this.ctx.stroke();
-      cs.draw.reset();
+      this.ctx.beginPath()
+      this.ctx.moveTo(options.x1-cx,options.y1-cy)
+      this.ctx.lineTo(options.x2-cx,options.y2-cy)
+      this.ctx.stroke()
+      cs.draw.reset()
    },
    fillRect: function(args){
       if(typeof args.width == 'undefined') args.width = args.size || 0
       if(typeof args.height == 'undefined') args.height = args.size || 0
 
-      this.ctx.fillRect(args.x,args.y,args.width,args.height);
-      cs.draw.reset();
+      this.ctx.fillRect(args.x,args.y,args.width,args.height)
+      cs.draw.reset()
    },
    strokeRect: function(args){
       var lineWidth = this.ctx.lineWidth > 1 ? this.ctx.lineWidth : 0
@@ -512,17 +513,17 @@ cs.draw = {
          height: (args.height ? args.height : args.size) - lineWidth
       }
       this.ctx.strokeRect(rect.x, rect.y, rect.width, rect.height)
-      cs.draw.reset();
+      cs.draw.reset()
    },
    circle : function(x, y, rad, fill){
       if(typeof fill == 'undefined') fill = true
-      cs.draw.ctx.beginPath();
-      cs.draw.ctx.arc(x, y, rad, 0, Math.PI*2, true);
-      cs.draw.ctx.closePath();
+      cs.draw.ctx.beginPath()
+      cs.draw.ctx.arc(x, y, rad, 0, Math.PI*2, true)
+      cs.draw.ctx.closePath()
       (fill)
           ? cs.draw.ctx.fill()
           : cs.draw.ctx.stroke()
-      cs.draw.reset();
+      cs.draw.reset()
    },
    circleGradient : function(x, y, radius, c1, c2){
       //Draw a circle
@@ -538,37 +539,37 @@ cs.draw = {
       cs.draw.reset()
    },
    fixPosition: function(args){
-      x = Math.floor(args.x); y = Math.floor(args.y);
-      width = Math.floor(args.width);
-      height = Math.floor(args.height);
+      x = Math.floor(args.x); y = Math.floor(args.y)
+      width = Math.floor(args.width)
+      height = Math.floor(args.height)
 
       return { x:x, y:y, width:width, height:height }
    },
    setColor: function(color){
-      this.ctx.fillStyle = color;
-      this.ctx.strokeStyle = color;
+      this.ctx.fillStyle = color
+      this.ctx.strokeStyle = color
    },
    setAlpha : function(alpha){
-      this.ctx.globalAlpha = alpha;
+      this.ctx.globalAlpha = alpha
    },
    setWidth : function(width){
-      this.ctx.lineWidth = width;
+      this.ctx.lineWidth = width
    },
    setFont : function(font){
-      this.ctx.font = font;
+      this.ctx.font = font
    },
    setTextAlign : function(alignment){
-      this.ctx.textAlign = alignment;
+      this.ctx.textAlign = alignment
    },
    setTextBaseline : function(alignment){
-      this.ctx.textBaseline=alignment;
+      this.ctx.textBaseline=alignment
    },
    setTextCenter : function(){
-      this.setTextAlign('center');
-      this.setTextBaseline('middle');
+      this.setTextAlign('center')
+      this.setTextBaseline('middle')
    },
    setOperation : function(operation){
-      this.ctx.globalCompositeOperation = operation;
+      this.ctx.globalCompositeOperation = operation
    },
    setSurface : function(name){
       this.surface = this.surfaces[name]
@@ -578,13 +579,13 @@ cs.draw = {
       this.skip = this.surface.skip
    },
    reset : function(){
-      cs.draw.setAlpha(1);
-      cs.draw.setWidth(1);
-      cs.draw.setFont(this.fontSize + "px Trebuchet MS");
-      cs.draw.setTextAlign('start');
-      cs.draw.setTextBaseline('top');
-      cs.draw.setColor("#000");
-      cs.draw.setOperation('source-over');
+      cs.draw.setAlpha(1)
+      cs.draw.setWidth(1)
+      cs.draw.setFont(this.fontSize + "px Trebuchet MS")
+      cs.draw.setTextAlign('start')
+      cs.draw.setTextBaseline('top')
+      cs.draw.setColor("#000")
+      cs.draw.setOperation('source-over')
    }
 }
 //---------------------------------------------------------------------------------------------//
@@ -599,11 +600,11 @@ cs.camera = {
    width : 500, maxWidth : 500,
    height : 200, maxHeight : 400,
    setup: function(options){
-      this.width = options.width;
-      this.height = options.height;
-      this.maxWidth = options.maxWidth || this.width;
-      this.maxHeight = options.maxHeight || this.height;
-      cs.draw.resize();
+      this.width = options.width
+      this.height = options.height
+      this.maxWidth = options.maxWidth || this.width
+      this.maxHeight = options.maxHeight || this.height
+      cs.draw.resize()
    },
    follow : function(obj){
       this.followX = obj.x
@@ -636,18 +637,18 @@ cs.room = {
    width : 1000,
    height : 400,
    transition: false,
-   restart: function(){this.restarting = true;},
+   restart: function(){this.restarting = true},
    reset: function(){
-      cs.obj.list = [];
-      cs.global = {};
-      cs.start();
-      cs.sound.reset();
+      cs.obj.list = []
+      cs.global = {}
+      cs.start()
+      cs.sound.reset()
       this.restarting = false
    },
    setup: function(info){
-      this.width = info.width; this.height = info.height;
+      this.width = info.width; this.height = info.height
       cs.draw.background = info.background || '#000'
-      this.rect = {x: 0, y: 0, width: this.width, height: this.height
+      this.rect = {x: 0, y: 0, width: this.width, height: this.height}
       cs.draw.resize()
    },
    outside(rect){
@@ -669,77 +670,77 @@ cs.input = {
     input : undefined,
     button : undefined,
     create : function(){
-        var form = document.createElement('form');
-        form.id = 'textInputForm';
-        form.setAttribute('onsubmit', 'cs.input.close(); return false');
-        form.setAttribute('autocomplete', 'off');
-        var input = document.createElement('input');
-        input.id = 'textInputText';
-        input.setAttribute('autocomplete', 'off');
-        input.type = 'text';
+        var form = document.createElement('form')
+        form.id = 'textInputForm'
+        form.setAttribute('onsubmit', 'cs.input.close() return false')
+        form.setAttribute('autocomplete', 'off')
+        var input = document.createElement('input')
+        input.id = 'textInputText'
+        input.setAttribute('autocomplete', 'off')
+        input.type = 'text'
 
-        var button = document.createElement('button');
-        button.type = 'submit';
-        button.innerHTML = 'Enter';
+        var button = document.createElement('button')
+        button.type = 'submit'
+        button.innerHTML = 'Enter'
 
-        form.appendChild(input);
-        form.appendChild(button);
-        document.body.appendChild(form);
+        form.appendChild(input)
+        form.appendChild(button)
+        document.body.appendChild(form)
 
-        this.form = form;
-        this.input = input;
-        this.button = button;
+        this.form = form
+        this.input = input
+        this.button = button
     },
     open : function(id){
         if(this.form.style.display !== 'block'){
-            this.openBy = id;
-            this.form.style.display = 'block';
-            this.input.click();
-            this.input.focus();
+            this.openBy = id
+            this.form.style.display = 'block'
+            this.input.click()
+            this.input.focus()
         }
     },
     close : function(){
         if(this.form.style.display == 'block'){
-            this.form.style.display = 'none';
-            this.text = this.input.value;
-            document.getElementById('view').click();
-            document.getElementById('view').focus();
-            this.input.value = '';
+            this.form.style.display = 'none'
+            this.text = this.input.value
+            document.getElementById('view').click()
+            document.getElementById('view').focus()
+            this.input.value = ''
         }
-        return false;
+        return false
     },
     return : function(id){
-        var text = this.text;
+        var text = this.text
         if(this.openBy == id && text !== ''){
-            this.text = '';
-            return text;
+            this.text = ''
+            return text
         }
-        return '';
+        return ''
     },
     resize : function(){
-        var winWidth = window.innerWidth;
-        var winHeight = window.innerHeight;
+        var winWidth = window.innerWidth
+        var winHeight = window.innerHeight
 
-        var border = 2;
-        var cont = this.form;
-        var input = this.input;
-        var button = this.button;
+        var border = 2
+        var cont = this.form
+        var input = this.input
+        var button = this.button
         var h = 50
-        var nw = winWidth;
+        var nw = winWidth
 
-        var bw = 100;
-        var iw = nw-bw;
+        var bw = 100
+        var iw = nw-bw
         //Width
-        cont.style.width=nw + 'px';
-        input.style.width=iw + 'px';
-        button.style.width=bw + 'px';
+        cont.style.width=nw + 'px'
+        input.style.width=iw + 'px'
+        button.style.width=bw + 'px'
         //Height
-        input.style.height = h + 'px';
-        button.style.height = h + 'px';
-        button.style.lineHeight = (h-border*2) + 'px';
+        input.style.height = h + 'px'
+        button.style.height = h + 'px'
+        button.style.lineHeight = (h-border*2) + 'px'
 
-        button.style.border = border + 'px solid black';
-        input.style.border = border + 'px solid black';
+        button.style.border = border + 'px solid black'
+        input.style.border = border + 'px solid black'
     }
 }
 //---------------------------------------------------------------------------------------------//
@@ -751,7 +752,7 @@ cs.key = {
     held : {},
     events : [],
     addEvent : function(keyCode, eventType){
-        var num = cs.key.events.length;
+        var num = cs.key.events.length
         cs.key.events[num] = {
             event : eventType,
             key : keyCode
@@ -760,11 +761,11 @@ cs.key = {
     },
     execute : function(){
         for(var i = 0; i < cs.key.events.length; i++){
-            var event = cs.key.events[i].event;
-            var key = cs.key.events[i].key;
-            cs.key.processEvent(key, event);
+            var event = cs.key.events[i].event
+            var key = cs.key.events[i].key
+            cs.key.processEvent(key, event)
         }
-        cs.key.events = [];
+        cs.key.events = []
     },
     processEvent : function(keyCode, type){
        if(type == 'up'){
@@ -773,29 +774,29 @@ cs.key = {
           return
        }
 
-      cs.key.down[keyCode] = true;
-      cs.key.held[keyCode] = true;
+      cs.key.down[keyCode] = true
+      cs.key.held[keyCode] = true
     },
     updateDown : function(keyEvent){
-        keyEvent.preventDefault();
+        keyEvent.preventDefault()
         if(!keyEvent.repeat){
-            var key = keyEvent.keyCode;
-            cs.key.virtualDown(key);
+            var key = keyEvent.keyCode
+            cs.key.virtualDown(key)
         }
     },
     updateUp : function(keyEvent){
-        var key = keyEvent.keyCode;
-        cs.key.virtualUp(key);
+        var key = keyEvent.keyCode
+        cs.key.virtualUp(key)
     },
     virtualDown : function(keyCode){
-        cs.key.addEvent(keyCode, 'down');
+        cs.key.addEvent(keyCode, 'down')
     },
     virtualUp : function(keyCode){
-        cs.key.addEvent(keyCode, 'up');
+        cs.key.addEvent(keyCode, 'up')
     },
     virtualPress : function(key){
-        this.virtualDown(key);
-        this.virtualUp(key);
+        this.virtualDown(key)
+        this.virtualUp(key)
     },
     reset : function(){
         for(var tmp in cs.key.down){
@@ -837,7 +838,7 @@ cs.mouse = {
 cs.touch = {
    list : [],
    add : function(id){
-      cs.sound.enable();
+      cs.sound.enable()
       for(var i = 0; i < cs.touch.list.length; i++)
          if(cs.touch.list[i].used === false) break
 
@@ -863,8 +864,8 @@ cs.touch = {
       cs.touch.move(e)
    },
    up: function(e){
-      var id = e.changedTouches[0].identifier;
-      cs.touch.remove(id);
+      var id = e.changedTouches[0].identifier
+      cs.touch.remove(id)
    },
    updatePos : function(id, x, y){
       for(var i = 0; i < cs.touch.list.length; i++){
@@ -877,10 +878,10 @@ cs.touch = {
       }
    },
    move: function(e){
-      e.preventDefault();
+      e.preventDefault()
       for(var i = 0; i < e.changedTouches.length; i++){
          var etouch = e.changedTouches[i]
-         cs.touch.updatePos(etouch.identifier, etouch.clientX, etouch.clientY);
+         cs.touch.updatePos(etouch.identifier, etouch.clientX, etouch.clientY)
       }
    },
    create : function(raw){
@@ -895,7 +896,7 @@ cs.touch = {
             if(typeof arg.width == 'undefined') arg.width = arg.size || 0
             if(typeof arg.height == 'undefined') arg.height = arg.size || 0
             return (this.x > arg.x && this.x < arg.x+arg.width
-                 && this.y > arg.y && this.y < arg.y+arg.height);
+                 && this.y > arg.y && this.y < arg.y+arg.height)
          },
          check : function(arg){
             if(this.id !== -1){
@@ -909,14 +910,14 @@ cs.touch = {
                }
                this.down = touch.down
                this.held = touch.held
-               this.up = touch.up;
+               this.up = touch.up
                if(this.up){
                   touch.used = false
                   this.held = false
                   this.id = -1
                }
             } else {
-               this.up = false;
+               this.up = false
                for(var i = 0; i < cs.touch.list.length; i++){
                   var ctouch = cs.touch.list[i]
 
@@ -948,14 +949,14 @@ cs.touch = {
    reset : function(){
       for(var i = 0; i < cs.touch.list.length; i++){
          if(cs.touch.list[i].down === true){
-            cs.touch.list[i].down = false;
-            cs.touch.list[i].held = true;
+            cs.touch.list[i].down = false
+            cs.touch.list[i].held = true
          }
-         cs.touch.list[i].up = false;
+         cs.touch.list[i].up = false
       }
    },
    convertToGameCords(x, y){
-      var rect = cs.view.getBoundingClientRect();
+      var rect = cs.view.getBoundingClientRect()
 
       var physicalViewWidth = (rect.right-rect.left)
       var physicalViewHeight = (rect.bottom-rect.top)
@@ -980,35 +981,35 @@ cs.sound = {
    active: true,
    volume : undefined,
    enable: function(){
-      if(this.canPlayAudio === true || !this.context) return;
+      if(this.canPlayAudio === true || !this.context) return
 
-      var source = this.context.createBufferSource();
-      source.buffer = this.context.createBuffer(1, 1, 22050);
-      source.connect(this.context.destination);
-      source.start(0);
-      this.canPlayAudio = true;
+      var source = this.context.createBufferSource()
+      source.buffer = this.context.createBuffer(1, 1, 22050)
+      source.connect(this.context.destination)
+      source.start(0)
+      this.canPlayAudio = true
    },
    init: function(){
-      this.list = {};
+      this.list = {}
       try {
          window.AudioContext =
-         window.AudioContext || window.webkitAudioContext;
-         this.context = new AudioContext();
+         window.AudioContext || window.webkitAudioContext
+         this.context = new AudioContext()
       } catch (e) {
-         this.context = undefined;
-         this.canPlayAudio = false;
-         alert('Web Audio API is not supported in this browser');
+         this.context = undefined
+         this.canPlayAudio = false
+         alert('Web Audio API is not supported in this browser')
       }
    },
    load: function(options){
-      var pathSplit = options.path.split('/');
-      var name = pathSplit.pop();
-      var path = pathSplit.toString('/');
-      var types = (options.extension ? options.extension : 'wav').split(',');
+      var pathSplit = options.path.split('/')
+      var name = pathSplit.pop()
+      var path = pathSplit.toString('/')
+      var types = (options.extension ? options.extension : 'wav').split(',')
 
-      this.list[name] = {};
+      this.list[name] = {}
       for(var i in types){
-         var type = types[i].trim();
+         var type = types[i].trim()
          this.list[name][type] = {
             loaded: false,
             path : path
@@ -1019,63 +1020,63 @@ cs.sound = {
          }
 
          this.list[name][type].request.csData = { name: name, type: type }
-         this.list[name][type].request.open('GET', this.list[name][type].path, true);
-         this.list[name][type].request.responseType = 'arraybuffer';
+         this.list[name][type].request.open('GET', this.list[name][type].path, true)
+         this.list[name][type].request.responseType = 'arraybuffer'
 
          this.list[name][type].request.onload = function(){
-            var name = this.csData.name;
-            var type = this.csData.type;
+            var name = this.csData.name
+            var type = this.csData.type
             cs.sound.context.decodeAudioData(this.response, function(buffer){
-               cs.sound.list[name][type].buffer = buffer;
-               cs.sound.list[name][type].loaded = true;
-            });
+               cs.sound.list[name][type].buffer = buffer
+               cs.sound.list[name][type].loaded = true
+            })
          }
-         cs.sound.list[name][type].request.send();
+         cs.sound.list[name][type].request.send()
       }
    },
    play: functionplay = function(audioName, options){
       if(this.list[audioName]['wav'].loaded === true){
          this.playList.forEach(function(audioObj){
             if(audioObj.name == audioName){
-               //console.log('Reuse this sound');
+               //console.log('Reuse this sound')
             }
          })
-         var csAudioObj = this.context.createBufferSource();
-         csAudioObj.name = audioName;
-         csAudioObj.buffer = this.list[audioName]['wav'].buffer;
+         var csAudioObj = this.context.createBufferSource()
+         csAudioObj.name = audioName
+         csAudioObj.buffer = this.list[audioName]['wav'].buffer
          for(var opt in options){ csAudioObj[opt] = options[opt] }
-         csAudioObj.gainNode = this.context.createGain();
-         csAudioObj.connect(csAudioObj.gainNode);
-         csAudioObj.gainNode.connect(this.context.destination);
-         csAudioObj.gainNode.gain.value = cs.sound.mute ? 0 : 1;
-         csAudioObj.start(0);
-         this.playList.push(csAudioObj);
-         return csAudioObj;
+         csAudioObj.gainNode = this.context.createGain()
+         csAudioObj.connect(csAudioObj.gainNode)
+         csAudioObj.gainNode.connect(this.context.destination)
+         csAudioObj.gainNode.gain.value = cs.sound.mute ? 0 : 1
+         csAudioObj.start(0)
+         this.playList.push(csAudioObj)
+         return csAudioObj
       }
-      return undefined;
+      return undefined
    },
    reset: function(){
       for(var sound in this.playList){
          //TODO there is an error here take a look in a second I got to go wash my cloths~!!!
-         if(!this.playList) return;
-         this.playList[sound].stop();
-         this.playList[sound].disconnect();
+         if(!this.playList) return
+         this.playList[sound].stop()
+         this.playList[sound].disconnect()
       }
    },
    toggleMute: function(bool){
       this.mute = bool;
-      (bool) ? this.setGain(0) : this.setGain(1);
+      (bool) ? this.setGain(0) : this.setGain(1)
    },
    setGain: function(gainValue){
-      console.log('GainValue: ' + gainValue);
+      console.log('GainValue: ' + gainValue)
       for(var audioObj in this.playList){
-         console.log('Muting...', audioObj);
-         this.playList[audioObj].gainNode.gain.value = gainValue;
+         console.log('Muting...', audioObj)
+         this.playList[audioObj].gainNode.gain.value = gainValue
       }
    },
    toggleActive: function(bool){
       if(this.context !== undefined)
-         (bool) ? this.context.resume() : this.context.suspend();
+         (bool) ? this.context.resume() : this.context.suspend()
    }
 }
 //---------------------------------------------------------------------------------------------//
@@ -1086,21 +1087,21 @@ cs.particle = {
     obj : {},
     burst : function(x, y, w, h, qty){
        if(typeof qty == 'undefined') qty = 0
-        var num = qty;
+        var num = qty
         if(num === 0){
-            num = this.settings.particlesPerStep;
+            num = this.settings.particlesPerStep
         }
         if(num < 0){
             num = (Math.floor(Math.random() * Math.abs(num)) === 1)
         }
         for(var i = 0; i < num; i++){
-            var c1 = cs.particle.rgbFromHex(this.settings.colorEnd);
-            var c2 = cs.particle.rgbFromHex(this.settings.colorStart);
-            var life = cs.math.iRandomRange(this.settings.lifeMin, this.settings.lifeMax);
-            var dir = cs.math.iRandomRange(this.settings.dirMin, this.settings.dirMax);
-            var speed = cs.math.iRandomRange(this.settings.speedMin, this.settings.speedMax);
-            var speedX = Math.cos(dir*Math.PI/180);
-            var speedY = Math.sin(dir*Math.PI/180);
+            var c1 = cs.particle.rgbFromHex(this.settings.colorEnd)
+            var c2 = cs.particle.rgbFromHex(this.settings.colorStart)
+            var life = cs.math.iRandomRange(this.settings.lifeMin, this.settings.lifeMax)
+            var dir = cs.math.iRandomRange(this.settings.dirMin, this.settings.dirMax)
+            var speed = cs.math.iRandomRange(this.settings.speedMin, this.settings.speedMax)
+            var speedX = Math.cos(dir*Math.PI/180)
+            var speedY = Math.sin(dir*Math.PI/180)
             var new_part = {
                 shape      : this.settings.shape,
                 c_r        : c1.r,
@@ -1129,68 +1130,68 @@ cs.particle = {
                 wobbleY    : cs.math.iRandomRange(-this.settings.wobbleY, this.settings.wobbleY),
                 wobbleSetY : this.settings.wobbleY,
             }
-            var len = this.obj.particle.list.length;
-            this.obj.particle.list[len] = new_part;
+            var len = this.obj.particle.list.length
+            this.obj.particle.list[len] = new_part
         }
     },
     step : function(){
-        var tempParticles = [];
+        var tempParticles = []
         for(var i = 0; i < this.obj.particle.list.length; i++){
-            var particle = this.obj.particle.list[i];
-            particle.life -= 1;
-            particle.size = particle.size + particle.grow/100;
-            particle.alpha = particle.alpha - particle.fade/10;
+            var particle = this.obj.particle.list[i]
+            particle.life -= 1
+            particle.size = particle.size + particle.grow/100
+            particle.alpha = particle.alpha - particle.fade/10
             if(particle.life > 0 && particle.alpha > 0 && particle.size > 0){
                 //Accelleration
-                particle.accel += particle.accelRate;
-                particle.gravity -= particle.gravityRate;
+                particle.accel += particle.accelRate
+                particle.gravity -= particle.gravityRate
 
                 //Wobble
                 if(particle.wobbleSetX !== 0){
                     if(particle.wobbleX > 0){
-                        particle.wobbleX -= 1; particle.x -= 1;
+                        particle.wobbleX -= 1; particle.x -= 1
                         if(particle.wobbleX === 0) particle.wobbleX = -particle.wobbleSetX
                     } else {
-                        particle.wobbleX += 1; particle.x += 1;
+                        particle.wobbleX += 1; particle.x += 1
                         if(particle.wobbleX === 0) particle.wobbleX = particle.wobbleSetX
                     }
                 }
                 if(particle.wobbleSetY !== 0){
                     if(particle.wobbleY > 0){
-                        particle.wobbleY -= 1; particle.y -= 4;
+                        particle.wobbleY -= 1; particle.y -= 4
                         if(particle.wobbleY === 0) particle.wobbleY = -particle.wobbleSetY
                     } else {
-                        particle.wobbleY += 1; particle.y += 4;
+                        particle.wobbleY += 1; particle.y += 4
                         if(particle.wobbleY === 0) particle.wobbleY = particle.wobbleSetY
                     }
                 }
 
                 //Position Particle?
                 var speed = particle.speed + particle.accel
-                particle.x += particle.speedX*speed;
-                particle.y += particle.speedY*(speed+particle.gravity);
+                particle.x += particle.speedX*speed
+                particle.y += particle.speedY*(speed+particle.gravity)
 
                 //Draw Particle
-                cs.draw.setAlpha(particle.alpha/100);
-                var r = Math.round(particle.c_r + particle.c_sr * particle.life);
-                var g = Math.round(particle.c_g + particle.c_sg * particle.life);
-                var b = Math.round(particle.c_b + particle.c_sb * particle.life);
-                cs.draw.setColor(cs.particle.hexFromRgb(r,g,b));
-                var cx = particle.x;
-                var cy = particle.y;
+                cs.draw.setAlpha(particle.alpha/100)
+                var r = Math.round(particle.c_r + particle.c_sr * particle.life)
+                var g = Math.round(particle.c_g + particle.c_sg * particle.life)
+                var b = Math.round(particle.c_b + particle.c_sb * particle.life)
+                cs.draw.setColor(cs.particle.hexFromRgb(r,g,b))
+                var cx = particle.x
+                var cy = particle.y
                 if(particle.shape == "square"){
-                    cx = cx - (particle.size/2);
-                    cy = cy - (particle.size/2);
+                    cx = cx - (particle.size/2)
+                    cy = cy - (particle.size/2)
 
-                    cs.draw.fillRect({ x:cx, y:cy, width:particle.size, height:particle.size });
+                    cs.draw.fillRect({ x:cx, y:cy, width:particle.size, height:particle.size })
                 } else {
-                    cs.draw.circle(cx, cy, particle.size);
+                    cs.draw.circle(cx, cy, particle.size)
                 }
-                tempParticles[tempParticles.length] = particle;
+                tempParticles[tempParticles.length] = particle
             }
         }
         //Reset Particles with only live parts
-        this.obj.particle.list = tempParticles;
+        this.obj.particle.list = tempParticles
     },
     rgbFromHex : function(hex){
         return {
@@ -1200,11 +1201,11 @@ cs.particle = {
         }
     },
     hexFromRgb : function(r, g, b){
-        r = r.toString(16); g = g.toString(16); b = b.toString(16);
+        r = r.toString(16); g = g.toString(16); b = b.toString(16)
         return '#' +
             (r.length == 1 ? '0' + r : r) +
             (g.length == 1 ? '0' + g : g) +
-            (b.length == 1 ? '0' + b : b);
+            (b.length == 1 ? '0' + b : b)
     }
 }
 //---------------------------------------------------------------------------------------------//
@@ -1242,13 +1243,13 @@ cs.storage = {
 //---------------------------------------------------------------------------------------------//
 cs.math = {
     sign : function(number){
-        return (number >= 0) ? 1 : -1;
+        return (number >= 0) ? 1 : -1
     },
     iRandomRange : function(min, max) {
         return Math.floor(Math.random() * (max - min+1)) + min
     },
     choose: function(array){
-        return array[this.iRandomRange(0, array.length-1)];
+        return array[this.iRandomRange(0, array.length-1)]
     }
 }
 //---------------------------------------------------------------------------------------------//
@@ -1258,23 +1259,23 @@ cs.network = {
     ws : {},
     status: false,
     connect : function(options){
-        var host = options.host || window.location.host;
+        var host = options.host || window.location.host
         if(options.ssl == undefined || options.ssl == false){
-            var url = "ws://"+host+":"+options.port;
+            var url = "ws://"+host+":"+options.port
         } else {
-            var url = "wss://"+host+":"+options.port;
+            var url = "wss://"+host+":"+options.port
         }
-        var ws = new WebSocket(url);
-        ws.onopen = function(){ cs.network.onconnect(); cs.network.status = true; }
+        var ws = new WebSocket(url)
+        ws.onopen = function(){ cs.network.onconnect(); cs.network.status = true }
         ws.onclose = function(){ cs.network.ondisconnect() }
         ws.onmessage =  function(event){ cs.network.onmessage(event.data) }
-        cs.network.ws = ws;
+        cs.network.ws = ws
     },
     send: function(data){
         if(typeof data !== 'string'){
-            data = JSON.stringify(data);
+            data = JSON.stringify(data)
         }
-        cs.network.ws.send(data);
+        cs.network.ws.send(data)
     },
     onconnect : function(){},
     ondisconnect: function(){},
