@@ -108,48 +108,61 @@ cs.loop = {
 // ---------------------------------------------------------------------------------------------//
 // -----------------------------------| Object Functions |--------------------------------------//
 // ---------------------------------------------------------------------------------------------//
+cs.Obj = function(options) {
+   var object = cs.objects[options.type]
+   var zIndex = cs.objects[options.type].zIndex || 0
+
+   // Create the object
+   this.zIndex = zIndex
+   this.live = true
+   this.type = options.type
+   this.id = cs.obj.unique
+   this.core = object.core || false
+   this.surface = 'game'
+   this.particle = { list : [], settings : {} }
+   this.touch = cs.touch.create()
+   this.x = options.x || 0
+   this.y = options.y || 0
+   this.width = object.width
+   this.height = object.height
+   this.sprite = object.sprite
+
+   // Run Create event
+   object.create.call(this)
+
+   // Add the object to the list
+   cs.obj.unique++
+
+   // Object Grouping
+   if (!cs.obj.objGroups[options.type]) cs.obj.objGroups[options.type] = []
+   cs.obj.objGroups[options.type].push(this)
+   return this
+}
+
+cs.Obj.prototype.destroy = function() {
+   var type = this.type
+   this.live = false
+
+   cs.obj.objGroups[type] = cs.obj.objGroups[type].filter(function(obj) { return obj.live })
+}
+
 cs.obj = {
    list: [],
    types: {},
    objGroups: {},
    unique: 0,
-   create: function(options) {
-      var object = cs.objects[options.type]
-      var zIndex = cs.objects[options.type].zIndex || 0
-      var pos = this.findPosition(zIndex)
-
-      // Create the object
-      var newObj = {
-         zIndex: zIndex,
-         live: true,
-         type: options.type,
-         id: this.unique,
-         core: object.core || false,
-         surface: 'game',
-         particle: { list : [], settings : {} },
-         touch: cs.touch.create(),
-         x: options.x || 0,
-         y: options.y || 0,
-         width: object.width,
-         height: object.height,
-         sprite: object.sprite,
+   addObj: function(obj) {
+      var pos = this.findPosition(obj.zIndex)
+      this.list.splice(pos, 0, obj)
+   },
+   addObjs: function(objArr) {
+      for (var obj of objArr) {
+         this.addObj(obj)
       }
-      // Run Create event
-      object.create.call(newObj)
-
-      // Add the object to the list
-      this.list.splice(pos, 0, newObj)
-      this.unique++
-
-      // Object Grouping
-      if (!this.objGroups[options.type]) this.objGroups[options.type] = []
-      this.objGroups[options.type].push(newObj)
-      return newObj
    },
    destroy: function(destroyObj) {
-      var type = destroyObj.type
       if (typeof destroyObj === 'object') {
-         destroyObj.live = false
+         destroyObj.destroy()
       } else {
          for (var obj of cs.obj.list) {
             if (obj.id === destroyObj) {
@@ -157,8 +170,8 @@ cs.obj = {
                var type = obj.type
             }
          }
+         this.objGroups[type] = this.objGroups[type].filter(function(obj) { return obj.live })
       }
-      this.objGroups[type] = this.objGroups[type].filter(function(obj) { return obj.live })
    },
    findPosition: function(zIndex) {
       for (var i = 0; i < this.list.length; i++) {

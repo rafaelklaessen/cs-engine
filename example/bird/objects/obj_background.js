@@ -6,12 +6,16 @@ cs.objects['obj_background'] = {
 		this.timer -= 1;
 		if(this.timer == -1){
 			for(var i = 0; i < 10; i++){
-				cs.obj.create({ type: 'obj_bgPart', x:cs.math.iRandomRange(0, cs.room.width), y:0 })
+				cs.obj.addObj(
+				 	new cs.Obj({ type: 'obj_bgPart', x:cs.math.iRandomRange(0, cs.room.width), y:0 })
+			 	)
 			}
 			this.timer = 0;
 		}
 		if(this.timer == 0){
-			cs.obj.create({ type:'obj_bgPart', x:cs.room.width, y:0 })
+			cs.obj.addObj(
+				new cs.Obj({ type:'obj_bgPart', x:cs.room.width, y:0 })
+			)
 			this.timer = cs.math.iRandomRange(40, 120);
 		}
 	}

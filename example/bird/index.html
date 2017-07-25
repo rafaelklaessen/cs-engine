@@ -74,9 +74,11 @@
                speed: 1
             }
 
-				cs.obj.create({ type:'obj_bird', x:(cs.room.width/2), y:cs.room.height/2 })
-				cs.obj.create({ type:'obj_interface' })
-				cs.obj.create({ type:'obj_background'})
+				cs.obj.addObjs([
+					new cs.Obj({ type:'obj_bird', x:(cs.room.width/2), y:cs.room.height/2 }),
+					new cs.Obj({ type:'obj_interface' }),
+					new cs.Obj({ type:'obj_background'})
+				])
 			}
 		</script>
 	</body>
