@@ -323,6 +323,9 @@ cs.sprite = {
    info: function(options) {
       return this.list[options.spr].info(options)
    },
+   getSprite: function(spriteName) {
+      return this.list[spriteName]
+   },
    addSprite: function(sprite) {
       this.list[sprite.getName()] = sprite
    },
@@ -683,6 +686,34 @@ cs.camera = {
 // ---------------------------------------------------------------------------------------------//
 // -----------------------------------| Room Functions |----------------------------------------//
 // ---------------------------------------------------------------------------------------------//
+cs.Room = function(info) {
+   this.transition = false
+   this.width = info.width || 1000
+   this.height = info.height || 400
+   cs.draw.background = info.background || '#000'
+   this.rect = {x: 0, y: 0, width: this.width, height: this.height}
+}
+
+cs.Room.prototype.restart = function() {
+   this.restarting = true
+}
+
+cs.Room.prototype.reset = function() {
+   cs.obj.list = []
+   cs.global = {}
+   cs.start()
+   cs.sound.reset()
+   this.restarting = false
+}
+
+cs.Room.prototype.outside = function() {
+   if (typeof rect.width == 'undefined') rect.width = 0
+   if (typeof rect.height == 'undefined') rect.height = 0
+
+   return (rect.x < 0 || rect.x + rect.width > this.width
+        || rect.y < 0 || rect.y + rect.height > this.height)
+}
+
 cs.room = {
    width: 1000,
    height: 400,
@@ -1023,6 +1054,66 @@ cs.touch = {
 // ---------------------------------------------------------------------------------------------//
 // -----------------------------------| Sound Functions |---------------------------------------//
 // ---------------------------------------------------------------------------------------------//
+cs.Sound = function(options) {
+   var pathSplit = options.path.split('/')
+   this.name = pathSplit.pop()
+   var path = pathSplit.toString('/')
+   var types = (options.extension ? options.extension : 'wav').split(',')
+
+   for (var i in types) {
+      var type = types[i].trim()
+      this[type] = {
+         loaded: false,
+         path: path
+         + '/' + this.name
+         + '.' + type,
+         buffer: null,
+         request: new XMLHttpRequest()
+      }
+
+      this[type].request.csData = { name: name, type: type }
+      this[type].request.open('GET', this[type].path, true)
+      this[type].request.responseType = 'arraybuffer'
+
+      var that = this
+      this[type].request.onload = function() {
+         var name = this.csData.name
+         var type = this.csData.type
+         cs.sound.context.decodeAudioData(this.response, function(buffer) {
+            that[type].buffer = buffer
+            that[type].loaded = true
+         })
+      }
+      this[type].request.send()
+   }
+}
+
+cs.Sound.prototype.getName = function() {
+   return this.name
+}
+
+cs.Sound.prototype.play = function(options) {
+   if (this['wav'].loaded === true) {
+      cs.sound.playList.forEach(function(audioObj) {
+         if (audioObj.name == this.name) {
+            // console.log('Reuse this sound')
+         }
+      })
+      var csAudioObj = cs.sound.context.createBufferSource()
+      csAudioObj.name = this.name
+      csAudioObj.buffer = this['wav'].buffer
+      for (var opt in options) { csAudioObj[opt] = options[opt] }
+      csAudioObj.gainNode = cs.sound.context.createGain()
+      csAudioObj.connect(csAudioObj.gainNode)
+      csAudioObj.gainNode.connect(cs.sound.context.destination)
+      csAudioObj.gainNode.gain.value = cs.sound.mute ? 0 : 1
+      csAudioObj.start(0)
+      cs.sound.playList.push(csAudioObj)
+      return csAudioObj
+   }
+   return undefined
+}
+
 cs.sound = {
    list: {},
    playList: [],
@@ -1052,59 +1143,16 @@ cs.sound = {
          alert('Web Audio API is not supported in this browser')
       }
    },
-   load: function(options) {
-      var pathSplit = options.path.split('/')
-      var name = pathSplit.pop()
-      var path = pathSplit.toString('/')
-      var types = (options.extension ? options.extension : 'wav').split(',')
-
-      this.list[name] = {}
-      for (var i in types) {
-         var type = types[i].trim()
-         this.list[name][type] = {
-            loaded: false,
-            path: path
-            + '/' + name
-            + '.' + type,
-            buffer: null,
-            request: new XMLHttpRequest()
-         }
-
-         this.list[name][type].request.csData = { name: name, type: type }
-         this.list[name][type].request.open('GET', this.list[name][type].path, true)
-         this.list[name][type].request.responseType = 'arraybuffer'
-
-         this.list[name][type].request.onload = function() {
-            var name = this.csData.name
-            var type = this.csData.type
-            cs.sound.context.decodeAudioData(this.response, function(buffer) {
-               cs.sound.list[name][type].buffer = buffer
-               cs.sound.list[name][type].loaded = true
-            })
-         }
-         cs.sound.list[name][type].request.send()
-      }
+   play: function(audioName, options) {
+      return this.list[audioName].play()
    },
-   play: functionplay = function(audioName, options) {
-      if (this.list[audioName]['wav'].loaded === true) {
-         this.playList.forEach(function(audioObj) {
-            if (audioObj.name == audioName) {
-               // console.log('Reuse this sound')
-            }
-         })
-         var csAudioObj = this.context.createBufferSource()
-         csAudioObj.name = audioName
-         csAudioObj.buffer = this.list[audioName]['wav'].buffer
-         for (var opt in options) { csAudioObj[opt] = options[opt] }
-         csAudioObj.gainNode = this.context.createGain()
-         csAudioObj.connect(csAudioObj.gainNode)
-         csAudioObj.gainNode.connect(this.context.destination)
-         csAudioObj.gainNode.gain.value = cs.sound.mute ? 0 : 1
-         csAudioObj.start(0)
-         this.playList.push(csAudioObj)
-         return csAudioObj
+   addSound: function(sound) {
+      this.list[sound.getName()] = sound
+   },
+   addSounds: function(soundArr) {
+      for (sound of soundArr) {
+         this.addSound(sound)
       }
-      return undefined
    },
    reset: function() {
       for (var sound in this.playList) {
