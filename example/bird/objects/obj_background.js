@@ -21,7 +21,7 @@ cs.Obj.registerObj('obj_background', {
 	}
 })
 
-cs.Obj.registerObj('obj_background', {
+cs.Obj.registerObj('obj_bgPart', {
 	zIndex: 10,
 	create: function(){
 		this.timer = 600;
