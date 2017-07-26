@@ -4,6 +4,9 @@ export default class Key {
    static held = {}
    static events = {}
 
+   static updateDown = Key.updateDown.bind(Key)
+   static updateUp = Key.updateUp.bind(Key)
+
    static addEvent(keyCode, eventType) {
       var num = this.events.length
       this.events[num] = {

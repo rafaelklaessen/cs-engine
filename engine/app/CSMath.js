@@ -4,7 +4,7 @@ export default class CSMath {
    }
 
    static iRandomRange(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min
+      return Math.round(min + Math.random() * (max - min))
    }
 
    static choose(array) {
