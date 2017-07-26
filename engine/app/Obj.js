@@ -105,4 +105,8 @@ export default class Obj {
          ? this.objGroups[type].length
          : 0
    }
+
+   static registerObj(name, obj) {
+      cs.objects[name] = obj
+   }
 }

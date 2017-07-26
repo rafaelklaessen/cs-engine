@@ -1,4 +1,4 @@
-cs.objects['obj_background'] = {
+cs.Obj.registerObj('obj_background', {
 	create: function(){
 		this.timer = 0;
 	},
@@ -19,9 +19,9 @@ cs.objects['obj_background'] = {
 			this.timer = cs.Math.iRandomRange(40, 120);
 		}
 	}
-}
+})
 
-cs.objects['obj_bgPart'] = {
+cs.Obj.registerObj('obj_background', {
 	zIndex: 10,
 	create: function(){
 		this.timer = 600;
@@ -51,9 +51,9 @@ cs.objects['obj_bgPart'] = {
 			this.x -= this.hspeed;
 
 		if(this.x < -this.width){
-			cs.Obj.destroy(this);
+			this.destroy()
 		}
 
 		cs.Draw.sprite({ spr:this.sprite, x:this.x, y:this.y });
 	}
-}
+})
