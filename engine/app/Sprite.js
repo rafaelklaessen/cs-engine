@@ -5,7 +5,7 @@ export default class Sprite {
    static list = {}
 
    constructor(options) {
-      cs.loading++
+      cs.loading += 1
       this.name = options.path.split('/').pop()
 
       // Set up
@@ -35,7 +35,7 @@ export default class Sprite {
          let dx = 0
          let dy = 0
          while (dx < this.width && dy < this.height) {
-            var frame = {}
+            const frame = {}
             frame.canvas = document.createElement('canvas')
             frame.canvas.width = this.fwidth
             frame.canvas.height = this.fheight
@@ -74,7 +74,7 @@ export default class Sprite {
       this.img.frames[0].ctx.clearRect(0, 0, width, height)
       let x = 0
       while (x < width) {
-         var y = 0
+         let y = 0
          while (y < height) {
             this.frames[0].ctx.drawImage(sprite, x, y)
             y += this.height

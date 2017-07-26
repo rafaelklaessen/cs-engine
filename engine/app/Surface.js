@@ -53,8 +53,14 @@ export default class Surface {
          ? cs.view.height
          : cs.view.height - Math.floor(cs.camera.getScale() * ((cs.camera.getHeight()) - this.canvas.height))
 
-      if (sx < 0) sx = 0; sWidth += sx * -1
-      if (sy < 0) sy = 0; sHeight += sy * -1
+      if (sx < 0) {
+         sx = 0
+         sWidth += sx * -1
+      }
+      if (sy < 0) {
+         sy = 0
+         sHeight += sy * -1
+      }
       if (sWidth > this.canvas.width) sWidth = this.canvas.width
       if (sHeight > this.canvas.height) sWidth = this.canvas.height
 
