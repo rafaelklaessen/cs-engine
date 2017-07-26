@@ -8,26 +8,24 @@ export default class Key {
    static updateUp = Key.updateUp.bind(Key)
 
    static addEvent(keyCode, eventType) {
-      var num = this.events.length
+      const num = this.events.length
       this.events[num] = {
-          event : eventType,
-          key : keyCode
+         event: eventType,
+         key: keyCode
       }
    }
 
    static execute() {
-      for (var i = 0; i < this.events.length; i++) {
-          var event = this.events[i].event
-          var key = this.events[i].key
-          this.processEvent(key, event)
+      for (let e of Object.values(this.events)) {
+         this.processEvent(e.key, e.event)
       }
+
       this.events = []
    }
 
    static processEvent(keyCode, type) {
       if (type == 'up') {
-         if (!this.up[keyCode])
-           this.up[keyCode] = true
+         this.up[keyCode] = true
          return
       }
 
@@ -38,14 +36,12 @@ export default class Key {
    static updateDown(keyEvent) {
       keyEvent.preventDefault()
       if (!keyEvent.repeat) {
-          var key = keyEvent.keyCode
-          this.virtualDown(key)
+         this.virtualDown(keyEvent.keyCode)
       }
    }
 
    static updateUp(keyEvent) {
-      var key = keyEvent.keyCode
-      this.virtualUp(key)
+      this.virtualUp(keyEvent.keyCode)
    }
 
    static virtualDown(keyCode) {
@@ -62,7 +58,7 @@ export default class Key {
    }
 
    static reset() {
-      for (var tmp in this.down) {
+      for (let tmp in this.down) {
           this.down[tmp] = false
           if (this.up[tmp]) {
              this.held[tmp] = false

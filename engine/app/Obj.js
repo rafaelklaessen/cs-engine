@@ -8,13 +8,14 @@ export default class Obj {
    static unique = 0
 
    constructor(options) {
-      var object = cs.objects[options.type]
-      var zIndex = cs.objects[options.type].zIndex || 0
+      const type = options.type
+      const object = cs.objects[type]
+      const zIndex = cs.objects[type].zIndex || 0
 
       // Create the object
       this.zIndex = zIndex
       this.live = true
-      this.type = options.type
+      this.type = type
       this.id = Obj.unique
       this.core = object.core || false
       this.surface = 'game'
@@ -33,26 +34,26 @@ export default class Obj {
       Obj.unique++
 
       // Object Grouping
-      if (!Obj.objGroups[options.type]) Obj.objGroups[options.type] = []
-      Obj.objGroups[options.type].push(this)
+      if (!Obj.objGroups[type]) Obj.objGroups[type] = []
+      Obj.objGroups[type].push(this)
    }
 
    setLive = (live) => this.live = live
 
    destroy() {
-      var type = this.type
+      const type = this.type
       this.live = false
 
-      Obj.objGroups[type] = Obj.objGroups[type].filter(function(obj) { return obj.live })
+      Obj.objGroups[type] = Obj.objGroups[type].filter((obj) => obj.live)
    }
 
    static addObj(obj) {
-      var pos = this.findPosition(obj.zIndex)
+      const pos = this.findPosition(obj.zIndex)
       this.list.splice(pos, 0, obj)
    }
 
    static addObjs(objArr) {
-      for (var obj of objArr) {
+      for (let obj of objArr) {
          this.addObj(obj)
       }
    }
@@ -61,37 +62,35 @@ export default class Obj {
       if (typeof destroyObj === 'object') {
          destroyObj.destroy()
       } else {
-         for (var obj of this.list) {
+         for (let obj of this.list) {
             if (obj.id === destroyObj) {
-               obj.setLive(false)
-               var type = obj.type
+               obj.destroy()
             }
          }
-         this.objGroups[type] = this.objGroups[type].filter(function(obj) { return obj.live })
       }
    }
 
    static findPosition(zIndex) {
-      for (var i = 0; i < this.list.length; i++) {
-         if (zIndex >= this.list[i].zIndex)
-            return i
+      let i = 0
+      for (i = 0; i < this.list.length; i++) {
+         if (zIndex >= this.list[i].zIndex) return i
       }
       return i
    }
 
-   all(type) {
-      return this.list.filter(function(obj) {
-         return (obj.type == type && obj.live)
-      })
+   static all(type) {
+      return this.list.filter((obj) =>
+         (obj.type == type && obj.live)
+      )
    }
 
-   find(type) {
-      return this.list.find(function(obj) {
-         return (obj.type == type && obj.live)
-      })
+   static find(type) {
+      return this.list.find((obj) =>
+         (obj.type == type && obj.live)
+      )
    }
 
-   count(type) {
+   static count(type) {
       return this.objGroups[type]
          ? this.objGroups[type].length
          : 0

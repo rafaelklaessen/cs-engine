@@ -7,16 +7,16 @@ export default class Input {
    static button = undefined
 
    static create() {
-      var form = document.createElement('form')
+      const form = document.createElement('form')
       form.id = 'textInputForm'
       form.setAttribute('onsubmit', 'cs.input.close() return false')
       form.setAttribute('autocomplete', 'off')
-      var input = document.createElement('input')
+      const input = document.createElement('input')
       input.id = 'textInputText'
       input.setAttribute('autocomplete', 'off')
       input.type = 'text'
 
-      var button = document.createElement('button')
+      const button = document.createElement('button')
       button.type = 'submit'
       button.innerHTML = 'Enter'
 
@@ -31,56 +31,56 @@ export default class Input {
 
    static open(id) {
       if (this.form.style.display !== 'block') {
-           this.openBy = id
-           this.form.style.display = 'block'
-           this.input.click()
-           this.input.focus()
+         this.openBy = id
+         this.form.style.display = 'block'
+         this.input.click()
+         this.input.focus()
       }
    }
 
    static close() {
       if (this.form.style.display == 'block') {
-           this.form.style.display = 'none'
-           this.text = this.input.value
-           document.getElementById('view').click()
-           document.getElementById('view').focus()
-           this.input.value = ''
+         this.form.style.display = 'none'
+         this.text = this.input.value
+         document.getElementById('view').click()
+         document.getElementById('view').focus()
+         this.input.value = ''
       }
       return false
    }
 
    static return(id) {
-      var text = this.text
+      const text = this.text
       if (this.openBy == id && text !== '') {
-           this.text = ''
-           return text
+         this.text = ''
+         return text
       }
       return ''
    }
 
    static resize() {
-      var winWidth = window.innerWidth
-      var winHeight = window.innerHeight
+      const winWidth = window.innerWidth
+      const winHeight = window.innerHeight
 
-      var border = 2
-      var cont = this.form
-      var input = this.input
-      var button = this.button
-      var h = 50
-      var nw = winWidth
+      const border = 2
+      const cont = this.form
+      const input = this.input
+      const button = this.button
+      const h = 50
+      const nw = winWidth
 
-      var bw = 100
-      var iw = nw - bw
+      const bw = 100
+      const iw = nw - bw
       // Width
-      cont.style.width = nw + 'px'
-      input.style.width = iw + 'px'
-      button.style.width = bw + 'px'
+      cont.style.width = `${nw}px`
+      input.style.width = `${iw}px`
+      button.style.width = `${bw}px`
       // Height
-      input.style.height = h + 'px'
-      button.style.height = h + 'px'
-      button.style.lineHeight = (h - border * 2) + 'px'
+      input.style.height = `${h}px`
+      button.style.height = `${h}px`
+      button.style.lineHeight = `${(h - border * 2)}px`
 
-      button.style.border = border + 'px solid black'
-      input.style.border = border + 'px solid black'
+      button.style.border = `${border}px solid black`
+      input.style.border = `${border}px solid black`
    }
 }
