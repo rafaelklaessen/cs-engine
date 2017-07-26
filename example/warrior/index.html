@@ -7,7 +7,12 @@
 		<link rel="stylesheet" type="text/css" href="../../engine/css.css?v=1" />
 
 		<!-- Game Engine -->
-		<script src='../../engine/scr_core.js?v=12'></script>
+		<script src='../../engine/lib/vendor.js'></script>
+		<script src='../../engine/lib/app.js'></script>
+		<script>
+			var initEngine = require('init.js').default
+			initEngine()
+		</script>
 		<!-- Objects -->
 		<script src='objects/obj_player.js'></script>
 		<script src='objects/enviroment/obj_blob.js'></script>
@@ -37,7 +42,7 @@
 			cs.init('view', room, camera);
 
 			//Load Sprites
-			cs.sprite.addSprites([
+			cs.Sprite.addSprites([
 				new cs.Sprite({ path: 'sprites/spr_block' }),
 				new cs.Sprite({ path: 'sprites/spr_head' }),
 				new cs.Sprite({ path: 'sprites/spr_body' }),
@@ -51,13 +56,13 @@
 
 			cs.start = function(){
 				//Create Objects
-				cs.obj.addObjs([
+				cs.Obj.addObjs([
 					new cs.Obj({ type:'obj_player', x:50, y:50 }),
 					new cs.Obj({ type:'obj_blob', x:50, y:1 }),
 					new cs.Obj({ type:'obj_interface', x:50, y:1 })
 				])
 				for(var i = 0; i < 12; i++) {
-					cs.obj.addObj(
+					cs.Obj.addObj(
 						new cs.Obj({ type:'obj_block', x:i*16, y:cs.room.height-16 })
 					)
 				}

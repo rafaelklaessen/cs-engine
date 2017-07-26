@@ -28,11 +28,11 @@ cs.objects['obj_player'] = {
       cs.camera.follow(this);
        //Vertical Collisions
        var keys = {
-          left: cs.key.held[37] || false,
-          right: cs.key.held[39] || false,
-          up: cs.key.held[38] || false,
-          down: cs.key.held[40] || false,
-          space: cs.key.held[32] || false
+          left: cs.Key.held[37] || false,
+          right: cs.Key.held[39] || false,
+          up: cs.Key.held[38] || false,
+          down: cs.Key.held[40] || false,
+          space: cs.Key.held[32] || false
        }
 
        //Horizontal Movement
@@ -42,7 +42,7 @@ cs.objects['obj_player'] = {
           if(this.hspeed < this.speed){this.dir = 1; this.hspeed += 0.25}
        } else {
           if(this.hspeed !== 0){
-             var sign = cs.math.sign(this.hspeed);
+             var sign = cs.Math.sign(this.hspeed);
              this.hspeed -= sign/4;
           }
        }
@@ -126,29 +126,29 @@ cs.objects['obj_player'] = {
 
         if(this.dir > 0){
            //Going Right
-           cs.draw.sprite({ spr:'spr_sword', x:this.x+9+this.bounce-attackX, y:this.y+10, angle:-attackAngle })
-           cs.draw.sprite({ spr:'spr_head', x:this.x, y:this.y })
-           cs.draw.sprite({ spr:'spr_foot', x:this.x+1, y:this.y+13+this.bounce })
-           cs.draw.sprite({ spr:'spr_foot', x:this.x+6, y:this.y+13-this.bounce })
-           cs.draw.sprite({ spr:'spr_hand', x:this.x-1, y:this.y+9 })
-           cs.draw.sprite({ spr:'spr_hand', x:this.x+7+this.bounce-attackX, y:this.y+9 })
-           cs.draw.sprite({ spr:'spr_body', x:this.x+1, y:this.y+7 })
-           cs.draw.sprite({ spr:'spr_shield', x:this.x-4-this.bounce, y:this.y+8})
+           cs.Draw.sprite({ spr:'spr_sword', x:this.x+9+this.bounce-attackX, y:this.y+10, angle:-attackAngle })
+           cs.Draw.sprite({ spr:'spr_head', x:this.x, y:this.y })
+           cs.Draw.sprite({ spr:'spr_foot', x:this.x+1, y:this.y+13+this.bounce })
+           cs.Draw.sprite({ spr:'spr_foot', x:this.x+6, y:this.y+13-this.bounce })
+           cs.Draw.sprite({ spr:'spr_hand', x:this.x-1, y:this.y+9 })
+           cs.Draw.sprite({ spr:'spr_hand', x:this.x+7+this.bounce-attackX, y:this.y+9 })
+           cs.Draw.sprite({ spr:'spr_body', x:this.x+1, y:this.y+7 })
+           cs.Draw.sprite({ spr:'spr_shield', x:this.x-4-this.bounce, y:this.y+8})
         } else {
             //Going Left
-            cs.draw.sprite({ spr:'spr_sword', x:this.x-1-this.bounce+attackX, y:this.y+10, angle:attackAngle })
-            cs.draw.sprite({ spr:'spr_head', x:this.x+9, y:this.y, scaleX:-1 })
-            cs.draw.sprite({ spr:'spr_foot', x:this.x+1, y:this.y+13+this.bounce })
-            cs.draw.sprite({ spr:'spr_foot', x:this.x+6, y:this.y+13-this.bounce })
-            cs.draw.sprite({ spr:'spr_hand', x:this.x-1-this.bounce+attackX, y:this.y+9 })
-            cs.draw.sprite({ spr:'spr_hand', x:this.x+7-this.bounce, y:this.y+9 })
-            cs.draw.sprite({ spr:'spr_body', x:this.x+1, y:this.y+7 })
-            cs.draw.sprite({ spr:'spr_shield', x:this.x+4+this.bounce, y:this.y+8 })
+            cs.Draw.sprite({ spr:'spr_sword', x:this.x-1-this.bounce+attackX, y:this.y+10, angle:attackAngle })
+            cs.Draw.sprite({ spr:'spr_head', x:this.x+9, y:this.y, scaleX:-1 })
+            cs.Draw.sprite({ spr:'spr_foot', x:this.x+1, y:this.y+13+this.bounce })
+            cs.Draw.sprite({ spr:'spr_foot', x:this.x+6, y:this.y+13-this.bounce })
+            cs.Draw.sprite({ spr:'spr_hand', x:this.x-1-this.bounce+attackX, y:this.y+9 })
+            cs.Draw.sprite({ spr:'spr_hand', x:this.x+7-this.bounce, y:this.y+9 })
+            cs.Draw.sprite({ spr:'spr_body', x:this.x+1, y:this.y+7 })
+            cs.Draw.sprite({ spr:'spr_shield', x:this.x+4+this.bounce, y:this.y+8 })
         }
 
         //Camera
 
-        if(cs.key.down[33]){ cs.camera.zoomIn(); }
-        if(cs.key.down[34]){ cs.camera.zoomOut(); }
+//        if(cs.Key.down[33]){ cs.camera.zoomIn(); }
+//        if(cs.key.down[34]){ cs.camera.zoomOut(); }
     }
 }

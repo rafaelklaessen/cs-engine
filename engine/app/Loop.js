@@ -26,10 +26,9 @@ export default class Loop {
             const obj = Obj.list[i]
             Draw.setSurface(obj.getSurface())
 
-            Particle.settings = obj.getParticle().settings
-            Particle.obj = obj
-            const step = cs.objects[obj.type].step
-            step.call(obj)
+            Particle.setSettings(obj.getParticle().settings)
+            Particle.setObj(obj)
+            cs.objects[obj.getType()].step.call(obj)
          }
       }
 

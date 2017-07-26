@@ -62,9 +62,9 @@ cs.objects['obj_blob'] = {
 
       //Draw the Sprite draw less opacity is just took damage
       if(this.hit.timer > 0)
-         cs.draw.setAlpha(0.25 + (1 - this.hit.timer / this.hit.timerLength))
+         cs.Draw.setAlpha(0.25 + (1 - this.hit.timer / this.hit.timerLength))
 
-      cs.draw.sprite({
+      cs.Draw.sprite({
         spr:'spr_blob',
         x:this.x+((this.dir < 0) ? this.width : 0),
         y:this.y, scaleX:this.dir

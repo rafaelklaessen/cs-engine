@@ -5,6 +5,6 @@ cs.objects['obj_block'] = {
 		this.draw = 'gui'
 	},
 	step: function(){
-		cs.draw.sprite({ spr:'spr_block', x:this.x, y:this.y, width:40, aspectLock: true });
+		cs.Draw.sprite({ spr:'spr_block', x: this.x, y: this.y, width:40, aspectLock: true });
 	}
 }

@@ -6,8 +6,8 @@ cs.script.collide = function(that, objtype, options){
    var obj1bottom = obj1top + (options.height || that.height);
    var obj1left = (options.x || that.x) + hspeed;
    var obj1right = obj1left + (options.width || that.width);
-   var i = cs.obj.list.length; while(i--){
-      var obj2 = cs.obj.list[i]
+   var i = cs.Obj.list.length; while(i--){
+      var obj2 = cs.Obj.list[i]
       if (obj2.live !== true || obj2.id == that.id || obj2.type !== objtype)
          continue
 
@@ -25,8 +25,8 @@ cs.script.collide = function(that, objtype, options){
 }
 
 cs.script.collideRect = function(objtype, options){
-   var i = cs.obj.list.length; while(i--){
-      var obj = cs.obj.list[i];
+   var i = cs.Obj.list.length; while(i--){
+      var obj = cs.Obj.list[i];
       //Damn this is kind of creepy looking :]
       if(obj.live === true && (obj.type == objtype || objtype == '')){
          if(options.x + options.width > obj.x && options.x < obj.x + obj.width

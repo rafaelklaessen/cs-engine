@@ -7,7 +7,12 @@
 		<link rel="stylesheet" type="text/css" href="../../engine/css.css?v=1" />
 
 		<!-- Game Engine -->
-		<script src='../../engine/scr_core.js'></script>
+		<script src='../../engine/lib/vendor.js'></script>
+		<script src='../../engine/lib/app.js'></script>
+		<script>
+			var initEngine = require('init.js').default
+			initEngine()
+		</script>
 		<script src='objects/obj_block.js'></script>
 
 	</head>
@@ -15,12 +20,25 @@
 		<!--Game Area-->
 		<canvas id="view"></canvas>
 		<script>
-			cs.init('view')
+			//Room Setup
+			var room = new cs.Room({
+				width: 800,
+				height: 256,
+				background: '#87cefa'
+			})
+			var camera = new cs.Camera({
+				maxWidth:800,
+				maxHeight:256,
+				lock: true
+			})
+
+			//Initialize the view
+			cs.init('view', room, camera);
 
 			//Load Sprites
-			cs.sprite.load({ path: 'sprites/spr_block' })
+			cs.Sprite.addSprite(new cs.Sprite({ path: 'sprites/spr_block' }))
 			cs.start = function(){
-				cs.obj.create({ type:'obj_block', x:10, y:10 })
+				cs.Obj.addObj(new cs.Obj({ type:'obj_block', x:10, y:10 }))
 			}
 		</script>
 	</body>

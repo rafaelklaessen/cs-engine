@@ -62,6 +62,6 @@ cs.objects['obj_joystick'] = {
       cs.Draw.setColor('#FFF')
     	cs.Draw.text(1, 0, 'FPS Step: ' + cs.Fps.rate);
       cs.Draw.setColor('#FFF')
-    	cs.Draw.text(1, 30, 'Scale: ' + cs.Camera.scale);
+    	cs.Draw.text(1, 30, 'Scale: ' + cs.camera.scale);
     }
 }

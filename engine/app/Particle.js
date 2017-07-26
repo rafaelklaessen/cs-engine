@@ -5,6 +5,14 @@ export default class Particle {
    static settings = {}
    static obj = {}
 
+   static setSettings(settings) {
+      this.settings = settings
+   }
+
+   static setObj(obj) {
+      this.obj = obj
+   }
+
    static burst(x, y, w, h, qty) {
       if (typeof qty == 'undefined') qty = 0
       let num = qty

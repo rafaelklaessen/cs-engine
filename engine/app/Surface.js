@@ -48,10 +48,10 @@ export default class Surface {
       const dy = sy < 0 ? Math.floor(cs.camera.getScale() * (cs.camera.getY() * -1)) : 0
       const dWidth = sWidth <= this.canvas.width
          ? cs.view.width
-         : cs.view.width - Math.floor(cs.camera.getScale() * ((cs.camera.getWidth()) - surface.canvas.width))
+         : cs.view.width - Math.floor(cs.camera.getScale() * ((cs.camera.getWidth()) - this.canvas.width))
       const dHeight = sHeight <= this.canvas.height
          ? cs.view.height
-         : cs.view.height - Math.floor(cs.camera.getScale() * ((cs.camera.getHeight()) - surface.canvas.height))
+         : cs.view.height - Math.floor(cs.camera.getScale() * ((cs.camera.getHeight()) - this.canvas.height))
 
       if (sx < 0) sx = 0; sWidth += sx * -1
       if (sy < 0) sy = 0; sHeight += sy * -1
