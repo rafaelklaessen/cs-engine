@@ -6,10 +6,10 @@ export default class Mouse {
    static y = undefined
 
    static pos() {
-      var convert = Touch.convertToGameCords(this.x, this.y)
+      const convert = Touch.convertToGameCords(this.x, this.y)
       return (Draw.raw)
-         ? {x: this.x, y: this.y}
-         : {x: convert.x, y: convert.y}
+         ? { x: this.x, y: this.y }
+         : { x: convert.x, y: convert.y }
    }
 
    static move(e) {

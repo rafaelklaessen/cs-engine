@@ -60,7 +60,6 @@ export default class Input {
 
    static resize() {
       const winWidth = window.innerWidth
-      const winHeight = window.innerHeight
 
       const border = 2
       const cont = this.form

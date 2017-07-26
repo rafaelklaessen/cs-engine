@@ -3,16 +3,19 @@ export default class Network {
    static status = false
 
    static connect(options) {
-      var host = options.host || window.location.host
-      if (options.ssl == undefined || options.ssl == false) {
-          var url = 'ws:// ' + host + ':' + options.port
-      } else {
-          var url = 'wss:// ' + host + ':' + options.port
+      const host = options.host || window.location.host
+
+      const protocol = options.ssl ? 'wss' : 'ws'
+      const url = `${protocol}://${host}:${options.port}`
+
+      const ws = new WebSocket(url)
+      ws.onopen = () => {
+         this.onconnect()
+         this.status = true
       }
-      var ws = new WebSocket(url)
-      ws.onopen = function() { this.onconnect(); this.status = true }
-      ws.onclose = function() { this.ondisconnect() }
-      ws.onmessage =  function(event) { this.onmessage(event.data) }
+      ws.onclose = this.ondisconnect()
+      ws.onmessage = (event) => this.onmessage(event.data)
+
       this.ws = ws
    }
 
@@ -20,7 +23,7 @@ export default class Network {
       if (typeof data !== 'string') {
           data = JSON.stringify(data)
       }
-      cs.network.ws.send(data)
+      this.ws.send(data)
    }
 
    static onconnect() {}

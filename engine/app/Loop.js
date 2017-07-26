@@ -11,7 +11,7 @@ export default class Loop {
 
    static step() {
       if (this.run) {
-         setTimeout(function() { Loop.step() }, 1000/60)
+         setTimeout(() => Loop.step(), 1000 / 60)
       }
 
       Fps.update()
@@ -20,15 +20,15 @@ export default class Loop {
       cs.camera.update()
       Draw.clearSurfaces()
 
-      var i = Obj.list.length
+      let i = Obj.list.length
       while (i--) {
          if (Obj.list[i].live) {
-            var obj = Obj.list[i]
+            const obj = Obj.list[i]
             Draw.setSurface(obj.surface)
 
             Particle.settings = obj.particle.settings
             Particle.obj = obj
-            var step = cs.objects[obj.type].step
+            const step = cs.objects[obj.type].step
             step.call(obj)
          }
       }
@@ -40,7 +40,7 @@ export default class Loop {
       // Resize Canvas
       Draw.checkResize()
       Draw.displaySurfaces()
-      if (cs.room.restarting === true) {
+      if (cs.room.restarting) {
          cs.room.reset()
       }
    }

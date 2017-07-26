@@ -48,11 +48,13 @@ export default class Camera {
       if (this.x < 0) this.x = 0
       if (this.y < 0) this.y = 0
 
-      if (this.x+this.width > cs.room.getWidth())
+      if (this.x + this.width > cs.room.getWidth()) {
          this.x = (cs.room.getWidth() - this.width) / (cs.room.getWidth() < this.width ? 2 : 1)
+      }
 
-      if (this.y + this.height > cs.room.getHeight())
+      if (this.y + this.height > cs.room.getHeight()) {
          this.y = (cs.room.getHeight() - this.height) / (cs.room.getHeight() < this.height ? 2 : 1)
+      }
    }
 
    zoomOut() {}
