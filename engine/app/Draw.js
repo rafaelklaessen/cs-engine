@@ -157,12 +157,12 @@ export default class Draw {
       const sprite = Sprite.getSprite(options.spr)
       const info = sprite.getInfo(options)
 
-      this.debug.drawnSprites += 1
+      this.debug.drawnSprites++
       if (!this.raw && !this.skip) {
          // If outside camera skip
          if (options.x + sprite.getFwidth() < cs.camera.getX() || options.x  > cs.camera.getX() + cs.camera.getWidth()
          || options.y + sprite.getFheight() < cs.camera.getY() || options.y  > cs.camera.getY() + cs.camera.getHeight()) {
-            this.debug.skippedSprites += 1
+            this.debug.skippedSprites++
             return
          }
       }

@@ -31,7 +31,7 @@ export default class Obj {
       object.create.call(this)
 
       // Add the object to the list
-      Obj.unique += 1
+      Obj.unique++
 
       // Object Grouping
       if (!Obj.objGroups[type]) Obj.objGroups[type] = []
