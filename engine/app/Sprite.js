@@ -32,7 +32,8 @@ export default class Sprite {
 
          // Create Frames
          this.frames = []
-         var dx = 0, dy = 0
+         let dx = 0
+         let dy = 0
          while (dx < this.width && dy < this.height) {
             var frame = {}
             frame.canvas = document.createElement('canvas')
@@ -49,7 +50,7 @@ export default class Sprite {
             }
          }
 
-         for (var surface of Draw.surfaceOrder) {
+         for (let surface of Draw.surfaceOrder) {
             surface.clear = false
          }
 
@@ -71,7 +72,7 @@ export default class Sprite {
       this.img.fwidth = width
       this.img.fheight = height
       this.img.frames[0].ctx.clearRect(0, 0, width, height)
-      var x = 0
+      let x = 0
       while (x < width) {
          var y = 0
          while (y < height) {
@@ -115,8 +116,6 @@ export default class Sprite {
          frame: options.frame
       }
    }
-
-   info = this.getInfo
 
    draw(options) {
       options.spr = this.getName()

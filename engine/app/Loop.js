@@ -44,4 +44,8 @@ export default class Loop {
          cs.room.reset()
       }
    }
+
+   static stop() {
+      this.run = false
+   }
 }

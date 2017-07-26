@@ -26,7 +26,7 @@ export default class cs {
 
    static init(canvasId, room, camera) {
       // Listen for Errors
-      window.onerror = function(errorMsg, url, lineNumber) { Loop.run = false }
+      window.onerror = (errorMsg, url, lineNumber) => Loop.stop()
 
       // Initiate Inputs
       this.view = document.getElementById(canvasId)

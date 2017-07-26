@@ -9,7 +9,12 @@ export default class Room {
       this.width = info.width || 1000
       this.height = info.height || 400
       Draw.setBackground(info.background || '#000')
-      this.rect = {x: 0, y: 0, width: this.width, height: this.height}
+      this.rect = {
+         x: 0,
+         y: 0,
+         width: this.width,
+         height: this.height
+      }
    }
 
    getWidth = () => this.width

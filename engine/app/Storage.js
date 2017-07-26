@@ -2,23 +2,19 @@ import cs from './scr_core'
 
 export default class Storage {
    static load(info) {
-      var that = this
-      var name = info.path.split('/').pop()
-      var ajax = new XMLHttpRequest()
+      const name = info.path.split('/').pop()
+      const ajax = new XMLHttpRequest()
       cs.loading++
-      ajax.onreadystatechange = function() {
-         if (this.readyState == 4) {
-            var data = JSON.parse(this.responseText)
-            if (info.group && !that[info.group]) that[info.group] = {}
+      ajax.onreadystatechange = (e) => {
+         if (e.target.readyState == 4) {
+            const data = JSON.parse(e.target.responseText)
+            if (info.group && !this[info.group]) this[info.group] = {}
 
             info.group
-               ? that[info.group][info.name] = data
-               : that[info.name] = data
+               ? this[info.group][info.name] = data
+               : this[info.name] = data
 
             cs.loading -= 1
-            if (cs.loading == 0) {
-               cs.start()
-            }
          }
       }
       ajax.open('POST', `./${info.path}.json`, true)

@@ -8,35 +8,31 @@ export default class Sound {
    static volume = undefined
 
    constructor(options) {
-      var pathSplit = options.path.split('/')
+      const pathSplit = options.path.split('/')
       this.name = pathSplit.pop()
-      var path = pathSplit.toString('/')
-      var types = (options.extension ? options.extension : 'wav').split(',')
+      const path = pathSplit.toString('/')
+      const types = (options.extension ? options.extension : 'wav').split(',')
 
-      for (var i in types) {
-         var type = types[i].trim()
+      for (let i in types) {
+         const type = types[i].trim()
          this[type] = {
             loaded: false,
-            path: path
-            + '/' + this.name
-            + '.' + type,
+            path: `${path}/${this.name}.${type}`,
             buffer: null,
             request: new XMLHttpRequest()
          }
 
-         this[type].request.csData = { name: name, type: type }
+         this[type].request.csData = { name: this.name, type }
          this[type].request.open('GET', this[type].path, true)
          this[type].request.responseType = 'arraybuffer'
 
-         var that = this
-         this[type].request.onload = function() {
-            var name = this.csData.name
-            var type = this.csData.type
-            Sound.context.decodeAudioData(this.response, function(buffer) {
-               that[type].buffer = buffer
-               that[type].loaded = true
+         this[type].request.onload = (e) => {
+            Sound.context.decodeAudioData(e.target.response, (buffer) => {
+               this[type].buffer = buffer
+               this[type].loaded = true
             })
          }
+
          this[type].request.send()
       }
    }
@@ -50,10 +46,10 @@ export default class Sound {
                // console.log('Reuse this sound')
             }
          })
-         var csAudioObj = Sound.context.createBufferSource()
+         const csAudioObj = Sound.context.createBufferSource()
          csAudioObj.name = this.name
          csAudioObj.buffer = this['wav'].buffer
-         for (var opt in options) { csAudioObj[opt] = options[opt] }
+         for (let opt in options) { csAudioObj[opt] = options[opt] }
          csAudioObj.gainNode = Sound.context.createGain()
          csAudioObj.connect(csAudioObj.gainNode)
          csAudioObj.gainNode.connect(Sound.context.destination)
@@ -68,7 +64,7 @@ export default class Sound {
    static enable() {
       if (this.canPlayAudio === true || !this.context) return
 
-      var source = this.context.createBufferSource()
+      const source = this.context.createBufferSource()
       source.buffer = this.context.createBuffer(1, 1, 22050)
       source.connect(this.context.destination)
       source.start(0)

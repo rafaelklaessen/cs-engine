@@ -7,7 +7,8 @@ export default class Touch {
 
    static add(id) {
       Sound.enable()
-      for (var i = 0; i < this.list.length; i++)
+      let i = 0
+      for (i = 0; i < this.list.length; i++)
          if (this.list[i].used === false) break
 
       this.list[i] = {}
@@ -20,7 +21,7 @@ export default class Touch {
    }
 
    static remove(id) {
-      for (var i = 0; i < this.list.length; i++) {
+      for (let i = 0; i < this.list.length; i++) {
          if (this.list[i].id == id) {
             this.list[i].used = false
             this.list[i].down = false
@@ -35,25 +36,23 @@ export default class Touch {
    }
 
    static up(e) {
-      var id = e.changedTouches[0].identifier
+      const id = e.changedTouches[0].identifier
       this.remove(id)
    }
 
    static updatePos(id, x, y) {
-      for (var i = 0; i < this.list.length; i++) {
-         var touch = this.list[i]
+      for (let touch of this.list) {
          if (touch.id == id) {
              touch.x = x
              touch.y = y
-             return { x: touch.x, y: touch.y }
+             return { x, y }
          }
       }
    }
 
    static move(e) {
       e.preventDefault()
-      for (var i = 0; i < e.changedTouches.length; i++) {
-         var etouch = e.changedTouches[i]
+      for (let etouch of e.changedTouches) {
          this.updatePos(etouch.identifier, etouch.clientX, etouch.clientY)
       }
    }
@@ -77,12 +76,13 @@ export default class Touch {
          check: function(arg) {
             if (this.id !== -1) {
                // We have an id attached up or down
-               var touch = Touch.list[this.id]
+               const touch = Touch.list[this.id]
                this.x = touch.x
                this.y = touch.y
                if (!Draw.raw) {
-                  convert = this.convertToGameCords(this.x, this.y)
-                  this.x = convert.x; this.y = convert.y
+                  const convert = this.convertToGameCords(this.x, this.y)
+                  this.x = convert.x
+                  this.y = convert.y
                }
                this.down = touch.down
                this.held = touch.held
@@ -94,15 +94,16 @@ export default class Touch {
                }
             } else {
                this.up = false
-               for (var i = 0; i < Touch.list.length; i++) {
-                  var ctouch = Touch.list[i]
+               for (let i = 0; i < Touch.list.length; i++) {
+                  const ctouch = Touch.list[i]
 
                   this.x = ctouch.x
                   this.y = ctouch.y
 
                   if (!Draw.raw) {
-                     convert = Touch.convertToGameCords(this.x, this.y)
-                     this.x = convert.x; this.y = convert.y
+                     const convert = Touch.convertToGameCords(this.x, this.y)
+                     this.x = convert.x
+                     this.y = convert.y
                   }
 
                   if (ctouch.down === true && ctouch.used === false) {
@@ -124,7 +125,7 @@ export default class Touch {
    }
 
    static reset() {
-      for (var i = 0; i < this.list.length; i++) {
+      for (let i = 0; i < this.list.length; i++) {
          if (this.list[i].down === true) {
             this.list[i].down = false
             this.list[i].held = true
@@ -134,16 +135,16 @@ export default class Touch {
    }
 
    static convertToGameCords(x, y) {
-      var rect = cs.view.getBoundingClientRect()
+      const rect = cs.view.getBoundingClientRect()
 
-      var physicalViewWidth = (rect.right-rect.left)
-      var physicalViewHeight = (rect.bottom-rect.top)
-      var hortPercent = (x - rect.left)/physicalViewWidth
-      var vertPercent = (y - rect.top)/physicalViewHeight
-      var gamex = Math.round(hortPercent * cs.camera.getWidth())
-      var gamey = Math.round(vertPercent * cs.camera.getHeight())
-      gamex = (gamex) + cs.camera.getX()
-      gamey = (gamey) + cs.camera.getY()
+      const physicalViewWidth = (rect.right-rect.left)
+      const physicalViewHeight = (rect.bottom-rect.top)
+      const hortPercent = (x - rect.left) / physicalViewWidth
+      const vertPercent = (y - rect.top) / physicalViewHeight
+      let gamex = Math.round(hortPercent * cs.camera.getWidth())
+      let gamey = Math.round(vertPercent * cs.camera.getHeight())
+      gamex = gamex + cs.camera.getX()
+      gamey = gamey + cs.camera.getY()
       return { x: gamex, y: gamey }
    }
 }
