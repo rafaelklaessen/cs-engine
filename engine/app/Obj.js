@@ -38,17 +38,27 @@ export default class Obj {
       Obj.objGroups[type].push(this)
    }
 
+   getZIndex = () => this.zIndex
    setLive = (live) => this.live = live
+   getLive = () => this.live
+   getType = () => this.type
+   getId = () => this.id
+   getSurface = () => this.surface
+   getParticle = () => this.particle
+   getX = () => this.x
+   getY = () => this.y
+   getWidth = () => this.width
+   getHeight = () => this.height
 
    destroy() {
       const type = this.type
       this.live = false
 
-      Obj.objGroups[type] = Obj.objGroups[type].filter((obj) => obj.live)
+      Obj.objGroups[type] = Obj.objGroups[type].filter((obj) => obj.getLive())
    }
 
    static addObj(obj) {
-      const pos = this.findPosition(obj.zIndex)
+      const pos = this.findPosition(obj.getZIndex())
       this.list.splice(pos, 0, obj)
    }
 
@@ -63,7 +73,7 @@ export default class Obj {
          destroyObj.destroy()
       } else {
          for (let obj of this.list) {
-            if (obj.id === destroyObj) {
+            if (obj.getId() === destroyObj) {
                obj.destroy()
             }
          }
@@ -80,13 +90,13 @@ export default class Obj {
 
    static all(type) {
       return this.list.filter((obj) =>
-         (obj.type == type && obj.live)
+         (obj.getType() == type && obj.getLive())
       )
    }
 
    static find(type) {
       return this.list.find((obj) =>
-         (obj.type == type && obj.live)
+         (obj.getType() == type && obj.getLive())
       )
    }
 

@@ -1,6 +1,7 @@
 import cs from './scr_core'
 import Sprite from './Sprite'
 import Input from './Input'
+import Surface from './Surface'
 
 export default class Draw {
    static view = {
@@ -41,39 +42,25 @@ export default class Draw {
       ctx.imageSmoothingEnabled = false
    }
 
+   static getSurface(surfaceName) {
+      return this.surfaces[surfaceName]
+   }
+
    static createSurface(info) {
-      var num = this.surfaces.length
-      var canvas = document.createElement('canvas')
+      const surface = new Surface(info)
 
-      this.surfaces[info.name] = {
-         name: info.name,
-         canvas: canvas,
-         ctx: canvas.getContext('2d'),
-         zIndex: info.zIndex || 0,
-         width: info.width,
-         height: info.height,
-         raw: info.raw,
-         draw: true,
-         skip: info.skip,
-         drawOutside: info.drawOutside || false,
-         autoClear: info.autoClear == undefined ? true : info.autoClear,
-         append: info.append,
-         clearRequest: false,
-         clear: false
-      }
-
-      // Add and fix size
-      this.addSurfaceOrder(this.surfaces[info.name])
+      this.surfaces[surface.getName()] = surface
+      this.addSurfaceOrder(surface)
       this.resize()
 
-      // Return the element
-      return this.surfaces[info.name]
+      return surface
    }
 
    static addSurfaceOrder(surface) {
       // Find Place to put it!
-      for (var i = 0; i < this.surfaceOrder.length; i++) {
-         if (this.surfaceOrder[i].zIndex <= surface.zIndex)
+      let i = 0
+      for (i = 0; i < this.surfaceOrder.length; i++) {
+         if (this.surfaceOrder[i].getZIndex() <= surface.getZIndex())
             break
       }
 
@@ -82,77 +69,50 @@ export default class Draw {
 
    static clearSurfaces() {
       cs.view.ctx.clearRect(0, 0, cs.view.width, cs.view.height)
-      for (var surface of this.surfaceOrder) {
-         if (surface.autoClear || surface.clearRequest) {
+      for (let surface of this.surfaceOrder) {
+         if (surface.getAutoClear() || surface.getClearRequest()) {
             let clearRect = {
-               x: surface.raw ? 0 : cs.camera.getX(),
-               y: surface.raw ? 0 : cs.camera.getY(),
-               width: surface.raw ? surface.canvas.width : cs.camera.getWidth(),
-               height: surface.raw ? surface.canvas.height : cs.camera.getHeight(),
+               x: surface.getRaw() ? 0 : cs.camera.getX(),
+               y: surface.getRaw() ? 0 : cs.camera.getY(),
+               width: surface.getRaw() ? surface.getCanvas().width : cs.camera.getWidth(),
+               height: surface.getRaw() ? surface.getCanvas().height : cs.camera.getHeight(),
             }
-            if (surface.clearRequest) clearRect = surface.clearRequest
-            surface.ctx.clearRect(clearRect.x, clearRect.y, clearRect.width, clearRect.height)
-            surface.clearRequest = undefined
-            surface.clear = true
+            if (surface.getClearRequest()) clearRect = surface.getClearRequest()
+            surface.getCtx().clearRect(clearRect.x, clearRect.y, clearRect.width, clearRect.height)
+            surface.setClearRequest(undefined)
+            surface.setClear(true)
          }
       }
    }
 
    static clearSurface(options) {
-      var surface = this.surfaces[options.name]
-      surface.clearRequest = {
-         x: options.x || 0,
-         y: options.y || 0,
-         width: options.width || surface.canvas.width,
-         height: options.height || surface.canvas.height
-      }
+      const surface = this.getSurface([options.name])
+      surface.clear(options)
    }
 
    static displaySurfaces() {
-      var i = this.surfaceOrder.length
+      let i = this.surfaceOrder.length
       while (i--) {
-         this.displaySurface(this.surfaceOrder[i].name)
+         this.surfaceOrder[i].display()
       }
    }
 
    static displaySurface(surfaceName) {
-      var surface = this.surfaces[surfaceName]
-      let sx = surface.raw ? 0 : cs.camera.getX()
-      let sy = surface.raw ? 0 : cs.camera.getY()
-      let sWidth = surface.raw ? surface.canvas.width : cs.camera.getWidth()
-      let sHeight = surface.raw ? surface.canvas.height : cs.camera.getHeight()
-
-      // We will have to scale the X over becuse safari doesnt act like chrome
-      let dx = sx < 0 ? Math.floor(cs.camera.getScale() * (cs.camera.getX() * -1)) : 0
-      let dy = sy < 0 ? Math.floor(cs.camera.getScale() * (cs.camera.getY() * -1)) : 0
-      let dWidth = sWidth <= surface.canvas.width
-         ? cs.view.width
-         : cs.view.width - Math.floor(cs.camera.getScale() * ((cs.camera.getWidth()) - surface.canvas.width))
-      let dHeight = sHeight <= surface.canvas.height
-         ? cs.view.height
-         : cs.view.height - Math.floor(cs.camera.getScale() * ((cs.camera.getHeight()) - surface.canvas.height))
-
-      if (sx < 0) sx = 0; sWidth += sx * -1
-      if (sy < 0) sy = 0; sHeight += sy * -1
-      if (sWidth > surface.canvas.width) sWidth = surface.canvas.width
-      if (sHeight > surface.canvas.height) sWidth = surface.canvas.height
-
-      cs.view.ctx.drawImage(surface.canvas,
-         sx, sy, sWidth, sHeight,
-         dx, dy, dWidth, dHeight)
+      const surface = this.getSurface(surfaceName)
+      surface.display()
    }
 
    static resetSurfaces() {
-      for (var surface of this.surfaceOrder) {
-         surface.clear = false
+      for (let surface of this.surfaceOrder) {
+         surface.setClear(false)
       }
    }
 
    static checkResize() {
-      var rect = cs.view.getBoundingClientRect()
-      var w = rect.width
-      var h = rect.height
-      var o = screen.orientation
+      const rect = cs.view.getBoundingClientRect()
+      const w = rect.width
+      const h = rect.height
+      const o = screen.orientation
       if (w !== this.w || h !== this.h || o !== this.o) {
           this.w = w
           this.h = h
@@ -163,15 +123,15 @@ export default class Draw {
    }
 
    static resize() {
-      var viewSize = cs.view.getBoundingClientRect()
+      const viewSize = cs.view.getBoundingClientRect()
 
-      var w = viewSize.width
-      var h = viewSize.height
-      var ratioHeight = w / h // How many h = w
-      var ratioWidth = h / w // how man w = a h
+      const w = viewSize.width
+      const h = viewSize.height
+      const ratioHeight = w / h // How many h = w
+      const ratioWidth = h / w // how man w = a h
 
-      var nw = cs.camera.getMaxWidth() - (cs.camera.getMaxWidth() % ratioWidth)
-      var nh = nw * ratioWidth
+      let nw = cs.camera.getMaxWidth() - (cs.camera.getMaxWidth() % ratioWidth)
+      let nh = nw * ratioWidth
       if (nh >= cs.camera.getMaxHeight()) {
          nh = cs.camera.getMaxHeight() - (cs.camera.getMaxHeight() % ratioHeight)
          nw = nh * ratioHeight
@@ -180,12 +140,8 @@ export default class Draw {
       cs.view.height = h
       this.ctxImageSmoothing(cs.view.ctx)
 
-      for (var surface of this.surfaceOrder) {
-         var img = surface.ctx.getImageData(0, 0, surface.canvas.width, surface.canvas.height)
-         surface.canvas.width = surface.raw ? w : cs.room.getWidth()
-         surface.canvas.height = surface.raw ? h : cs.room.getHeight()
-         surface.ctx.putImageData(img, 0, 0)
-         this.ctxImageSmoothing(surface.ctx)
+      for (let surface of this.surfaceOrder) {
+         surface.resize(w, h)
       }
 
       cs.camera.setWidth(Math.ceil(nw))
@@ -194,8 +150,8 @@ export default class Draw {
    }
 
    static sprite(options) {
-      var sprite = Sprite.getSprite(options.spr)
-      var info = sprite.getInfo(options)
+      const sprite = Sprite.getSprite(options.spr)
+      const info = sprite.getInfo(options)
 
       this.debug.drawnSprites++
       if (!this.raw && !this.skip) {
@@ -209,7 +165,7 @@ export default class Draw {
 
       this.ctx.save()
       this.ctx.translate(Math.floor(options.x), Math.floor(options.y))
-      this.ctx.rotate(options.angle * Math.PI/180)
+      this.ctx.rotate(options.angle * Math.PI / 180)
       this.ctx.scale(info.scaleX + 0.001, info.scaleY + 0.001)
       this.ctx.drawImage(sprite.getFrames()[info.frame], -sprite.getXoff(), -sprite.getYoff())
       this.ctx.restore()
@@ -227,8 +183,8 @@ export default class Draw {
    }
 
    static line(options) {
-      var cx = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
-      var cy = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
+      const cx = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
+      const cy = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
 
       this.ctx.beginPath()
       this.ctx.moveTo(options.x1 - cx, options.y1 - cy)
@@ -246,9 +202,9 @@ export default class Draw {
    }
 
    static strokeRect(args) {
-      var lineWidth = this.ctx.lineWidth > 1 ? this.ctx.lineWidth : 0
-      var lineWidthAdjust = (this.ctx.lineWidth % 2 ? -0.50 : 0) + Math.floor(this.ctx.lineWidth / 2)
-      var rect = {
+      const lineWidth = this.ctx.lineWidth > 1 ? this.ctx.lineWidth : 0
+      const lineWidthAdjust = (this.ctx.lineWidth % 2 ? -0.50 : 0) + Math.floor(this.ctx.lineWidth / 2)
+      const rect = {
          x: args.x + lineWidthAdjust,
          y: args.y + lineWidthAdjust,
          width: (args.width ? args.width : args.size) - lineWidth,
@@ -271,7 +227,7 @@ export default class Draw {
 
    static circleGradient(x, y, radius, c1, c2) {
       // Draw a circle
-      var g = this.ctx.createRadialGradient(x, y, 0, x, y, radius)
+      const g = this.ctx.createRadialGradient(x, y, 0, x, y, radius)
       g.addColorStop(1, c2)
       g.addColorStop(0, c1)
       this.ctx.fillStyle = g
@@ -331,11 +287,11 @@ export default class Draw {
    }
 
    static setSurface(name) {
-      this.surface = this.surfaces[name]
-      this.canvas = this.surface.canvas
-      this.ctx = this.surface.ctx
-      this.raw = this.surface.raw
-      this.skip = this.surface.skip
+      this.surface = this.getSurface(name)
+      this.canvas = this.surface.getCanvas()
+      this.ctx = this.surface.getCtx()
+      this.raw = this.surface.getRaw()
+      this.skip = this.surface.getSkip()
    }
 
    static reset() {

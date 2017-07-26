@@ -22,11 +22,11 @@ export default class Loop {
 
       let i = Obj.list.length
       while (i--) {
-         if (Obj.list[i].live) {
+         if (Obj.list[i].getLive()) {
             const obj = Obj.list[i]
-            Draw.setSurface(obj.surface)
+            Draw.setSurface(obj.getSurface())
 
-            Particle.settings = obj.particle.settings
+            Particle.settings = obj.getParticle().settings
             Particle.obj = obj
             const step = cs.objects[obj.type].step
             step.call(obj)

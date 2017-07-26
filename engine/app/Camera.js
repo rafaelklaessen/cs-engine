@@ -35,10 +35,10 @@ export default class Camera {
    getMaxHeight = () => this.maxHeight
 
    follow(obj) {
-      this.followX = obj.x
-      this.followY = obj.y
-      this.followWidth = obj.width
-      this.followHeight = obj.height
+      this.followX = obj.getX()
+      this.followY = obj.getY()
+      this.followWidth = obj.getWidth()
+      this.followHeight = obj.getHeight()
    }
 
    update() {
