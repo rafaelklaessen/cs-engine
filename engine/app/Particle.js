@@ -68,7 +68,7 @@ export default class Particle {
       const tempParticles = []
       for (let i = 0; i < this.obj.particle.list.length; i++) {
          const particle = this.obj.particle.list[i]
-         particle.life--
+         particle.life -= 1
          particle.size = particle.size + particle.grow / 100
          particle.alpha = particle.alpha - particle.fade / 10
          if (particle.life > 0 && particle.alpha > 0 && particle.size > 0) {
@@ -79,22 +79,22 @@ export default class Particle {
             // Wobble
             if (particle.wobbleSetX !== 0) {
                if (particle.wobbleX > 0) {
-                  particle.wobbleX--
-                  particle.x--
+                  particle.wobbleX -= 1
+                  particle.x -= 1
                   if (particle.wobbleX === 0) particle.wobbleX = -particle.wobbleSetX
                } else {
-                  particle.wobbleX++
-                  particle.x++
+                  particle.wobbleX += 1
+                  particle.x += 1
                   if (particle.wobbleX === 0) particle.wobbleX = particle.wobbleSetX
                }
             }
             if (particle.wobbleSetY !== 0) {
                if (particle.wobbleY > 0) {
-                  particle.wobbleY--
+                  particle.wobbleY -= 1
                   particle.y -= 4
                   if (particle.wobbleY === 0) particle.wobbleY = -particle.wobbleSetY
                } else {
-                  particle.wobbleY++
+                  particle.wobbleY += 1
                   particle.y += 4
                   if (particle.wobbleY === 0) particle.wobbleY = particle.wobbleSetY
                }

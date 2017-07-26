@@ -5,7 +5,7 @@ export default class Sprite {
    static list = {}
 
    constructor(options) {
-      cs.loading++
+      cs.loading += 1
       this.name = options.path.split('/').pop()
 
       // Set up
