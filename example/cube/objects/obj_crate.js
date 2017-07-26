@@ -24,6 +24,6 @@ cs.objects['obj_crate'] = {
 			}
 			this.y += this.vspeed;
 		}
-		cs.draw.sprite({ spr:'spr_crate', x:this.x, y:this.y });
+		cs.Draw.sprite({ spr:'spr_crate', x:this.x, y:this.y });
 	}
 }

@@ -1,11 +1,11 @@
-cs.network.onconnect = function(){
+cs.Network.onconnect = function(){
 	console.log('event override connected!');
 }
 
-cs.network.ondisconnect = function(){
+cs.Network.ondisconnect = function(){
 	console.log('Disconnected! :(');
 }
 
-cs.network.onmessage = function(data){
+cs.Network.onmessage = function(data){
 	cs.script.networkReceivedMessage(data);
 }

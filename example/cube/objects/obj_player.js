@@ -11,7 +11,7 @@ cs.objects['obj_player'] = {
 		this.dir = 0;
 		this.v_col = -1;
 		this.h_col = -1;
-		this.touch = cs.touch.create();
+		this.touch = cs.Touch.create();
 		this.old_keys = {
 			left: false,
 			right: false,
@@ -23,10 +23,10 @@ cs.objects['obj_player'] = {
 	},
 	step: function(){
 	    var keys = {
-	    	left: cs.key.held[37] || false,
-	    	right: cs.key.held[39] || false,
-	    	up: cs.key.held[38] || false,
-	    	down: cs.key.held[40] || false
+	    	left: cs.Key.held[37] || false,
+	    	right: cs.Key.held[39] || false,
+	    	up: cs.Key.held[38] || false,
+	    	down: cs.Key.held[40] || false
 	    }
 
 		//Horizontal Movement
@@ -36,7 +36,7 @@ cs.objects['obj_player'] = {
 			if(this.hspeed < this.speed){this.dir = 0; this.hspeed += 0.25}
 		} else {
 			if(this.hspeed !== 0){
-				var sign = cs.math.sign(this.hspeed);
+				var sign = cs.Math.sign(this.hspeed);
 				this.hspeed -= sign/4;
 			}
 		}
@@ -63,7 +63,7 @@ cs.objects['obj_player'] = {
 
 		cs.camera.follow(this);
 
-		cs.draw.sprite({ spr:'spr_player', x:this.x, y:this.y, frame:this.dir})
+		cs.Draw.sprite({ spr:'spr_player', x:this.x, y:this.y, frame:this.dir})
 
 		//Networking!
 		var network = cs.global.networkControl;

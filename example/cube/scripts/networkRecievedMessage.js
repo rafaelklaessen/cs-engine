@@ -6,13 +6,13 @@ cs.script.networkReceivedMessage = function(message){
 		case 'connect':
 			console.log('Connected ID: ' + message.id);
 			network.id = message.id;
-			cs.network.send({ type: 'connect', x: network.x, y: network.y });
+			cs.Network.send({ type: 'connect', x: network.x, y: network.y });
 			break;
 
 		case 'newPlayers':
 			console.log(message);
 			message.list.forEach(function(player){
-				var newPlayer = cs.obj.create('obj_otherplayer', player.x, player.y);
+				var newPlayer = cs.Obj.create('obj_otherplayer', player.x, player.y);
 				cs.global.networkControl.list[player.id] = {
 					id: player.id,
 					obj: newPlayer

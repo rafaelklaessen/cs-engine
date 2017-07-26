@@ -8,8 +8,8 @@ cs.script.collide = function(that, objtype, options){
    var obj1left = (options.x || that.x) + hspeed;
    var obj1right = obj1left + (options.width ? options.width : that.width);
 
-   var i = cs.obj.list.length; while(i--){
-      var obj2 = cs.obj.list[i];
+   var i = cs.Obj.list.length; while(i--){
+      var obj2 = cs.Obj.list[i];
       if (obj2.live === true && i !== that.id && obj2.type == objtype){
            var obj2top = obj2.y;
            var obj2bottum = obj2.y + obj2.height;

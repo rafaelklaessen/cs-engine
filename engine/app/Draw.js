@@ -42,6 +42,10 @@ export default class Draw {
       ctx.imageSmoothingEnabled = false
    }
 
+   static getCanvas() {
+      return this.canvas
+   }
+
    static getSurface(surfaceName) {
       return this.surfaces[surfaceName]
    }
@@ -218,7 +222,7 @@ export default class Draw {
       if (typeof fill == 'undefined') fill = true
       this.ctx.beginPath()
       this.ctx.arc(x, y, rad, 0, Math.PI * 2, true)
-      this.ctx.closePath()
+      this.ctx.closePath();
       (fill)
           ? this.ctx.fill()
           : this.ctx.stroke()

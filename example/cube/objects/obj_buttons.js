@@ -8,8 +8,8 @@ cs.objects['obj_buttons'] = {
 	},
 	step: function(){
 		var btnRect = {
-			x:cs.draw.canvas.width - 50,
-			y:cs.draw.canvas.height - 50,
+			x:cs.Draw.canvas.width - 50,
+			y:cs.Draw.canvas.height - 50,
 			width:this.width,
 			height:this.height
 		}
@@ -17,19 +17,19 @@ cs.objects['obj_buttons'] = {
 		this.touch.check(btnRect);
 		if(this.touch.down){
 			//console.log('open');
-			cs.key.virtualPress(38);
+			cs.Key.virtualPress(38);
 		}
 
-		var text = cs.input.return(this.id);
+		var text = cs.Input.return(this.id);
 		if(text !== ''){
 			console.log('Button 1 Says: ' + text);
 		}
 
 		if(this.touch.held){
-			cs.draw.setAlpha(0.5);
+			cs.Draw.setAlpha(0.5);
 		}
-		cs.draw.fillRect(btnRect)
-		cs.draw.setColor("white")
-		cs.draw.strokeRect(btnRect)
+		cs.Draw.fillRect(btnRect)
+		cs.Draw.setColor("white")
+		cs.Draw.strokeRect(btnRect)
 	}
 }

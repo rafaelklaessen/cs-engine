@@ -11,7 +11,7 @@ cs.objects['obj_otherplayer'] = {
 		this.dir = 0;
 		this.v_col = -1;
 		this.h_col = -1;
-		this.touch = cs.touch.create();
+		this.touch = cs.Touch.create();
 		this.socketID = -1,
 		this.keys = {
 			left: false,
@@ -28,7 +28,7 @@ cs.objects['obj_otherplayer'] = {
 			if(this.hspeed < this.speed){this.dir = 0; this.hspeed += 0.25}
 		} else {
 			if(this.hspeed !== 0){
-				var sign = cs.math.sign(this.hspeed);
+				var sign = cs.Math.sign(this.hspeed);
 				this.hspeed -= sign/4;
 			}
 		}
@@ -53,6 +53,6 @@ cs.objects['obj_otherplayer'] = {
 		}
 		this.y += this.vspeed;
 
-		cs.draw.sprite({ spr:'spr_player', x:this.x, y:this.y, scaleX:this.dir });
+		cs.Draw.sprite({ spr:'spr_player', x:this.x, y:this.y, scaleX:this.dir });
 	}
 }

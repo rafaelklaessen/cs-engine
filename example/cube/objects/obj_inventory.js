@@ -27,7 +27,7 @@ cs.objects['obj_inventory'] = {
 		this.show = false;
 	},
 	step: function(){
-		if(cs.key.up[73]){
+		if(cs.Key.up[73]){
 			if(this.show){
 				this.show = false;
 				cs.global.showJoyStick = true;
@@ -41,17 +41,17 @@ cs.objects['obj_inventory'] = {
 			//Draw open button
 			var openSize = 20;
 			var openRect = {
-				x: cs.draw.canvas.width-10-openSize,
+				x: cs.Draw.canvas.width-10-openSize,
 				y: 10,
 				size: openSize
 			}
 
-			cs.draw.fillRect(openRect);
-			cs.draw.setColor("#FFF");
-			cs.draw.strokeRect(openRect);
-			cs.draw.setColor("#FFF");
-			cs.draw.setTextCenter();
-			cs.draw.text({
+			cs.Draw.fillRect(openRect);
+			cs.Draw.setColor("#FFF");
+			cs.Draw.strokeRect(openRect);
+			cs.Draw.setColor("#FFF");
+			cs.Draw.setTextCenter();
+			cs.Draw.text({
 				x: openRect.x+(openRect.size/2),
 				y: openRect.y+(openSize/2),
 				text: 'i'
@@ -62,7 +62,7 @@ cs.objects['obj_inventory'] = {
 				cs.global.showJoyStick = false;
 			}
 		} else {
-         this.touch.check({ x:0, y:0, width:cs.draw.canvas.width, height:cs.draw.canvas.height })
+         this.touch.check({ x:0, y:0, width:cs.Draw.canvas.width, height:cs.Draw.canvas.height })
 
     		var slotCount = this.slots.length;
     		var colCount = 3;
@@ -72,18 +72,18 @@ cs.objects['obj_inventory'] = {
     		var inventHeight = (rowCount * this.width) + ((rowCount+1)*space);
 			var inventRect = {
 				x: 20,
-				y: (cs.draw.canvas.height - inventHeight)/2,
+				y: (cs.Draw.canvas.height - inventHeight)/2,
 				width: (colCount * this.width) + ((colCount+1)*space),
 				height: (rowCount * this.width) + ((rowCount+1)*space)
 			}
     		//Draw Border
-    		cs.draw.setAlpha(0.8);
-    		//cs.draw.rect(0, 0, cs.draw.width, cs.draw.height, true);
-    		cs.draw.setAlpha(0.5);
-    		cs.draw.setColor("#000");
-    		cs.draw.fillRect(inventRect)
-    		cs.draw.setColor("#FFF")
-    		cs.draw.strokeRect(inventRect)
+    		cs.Draw.setAlpha(0.8);
+    		//cs.Draw.rect(0, 0, cs.Draw.width, cs.Draw.height, true);
+    		cs.Draw.setAlpha(0.5);
+    		cs.Draw.setColor("#000");
+    		cs.Draw.fillRect(inventRect)
+    		cs.Draw.setColor("#FFF")
+    		cs.Draw.strokeRect(inventRect)
 			slotRect = {
 				x: inventRect.x + space,
 				y: inventRect.y + space,
@@ -102,7 +102,7 @@ cs.objects['obj_inventory'] = {
     			if(this.slots[slot].length){
     				img = 'spr_item_' + this.slots[slot];
     			}
-    			cs.draw.sprite({ spr:img, x:slotRect.x, y:slotRect.y });
+    			cs.Draw.sprite({ spr:img, x:slotRect.x, y:slotRect.y });
     			//blah blah blah
     			if(this.slotDown == -1){
     				if(this.touch.down && this.touch.within(slotRect)){
@@ -150,9 +150,9 @@ cs.objects['obj_inventory'] = {
 
     		//Draw slot held
     		if(this.slotDown >= 0 && himg !== ''){
-    			cs.draw.sprite({spr:himg, x:hx, y:hy});
-    			cs.draw.setColor('#6695e2');
-    			cs.draw.strokeRect({ x:hx, y:hy, width:this.width, height:this.height });
+    			cs.Draw.sprite({spr:himg, x:hx, y:hy});
+    			cs.Draw.setColor('#6695e2');
+    			cs.Draw.strokeRect({ x:hx, y:hy, width:this.width, height:this.height });
     		}
 
     		//Draw Close Button
@@ -167,12 +167,12 @@ cs.objects['obj_inventory'] = {
     			cs.global.showJoyStick = true;
     		}
 
-    		cs.draw.fillRect(closeRect);
-    		cs.draw.setColor("#FFF");
-    		cs.draw.strokeRect(closeRect);
-    		cs.draw.setColor("#FFF");
-    		cs.draw.setTextCenter();
-    		cs.draw.text({
+    		cs.Draw.fillRect(closeRect);
+    		cs.Draw.setColor("#FFF");
+    		cs.Draw.strokeRect(closeRect);
+    		cs.Draw.setColor("#FFF");
+    		cs.Draw.setTextCenter();
+    		cs.Draw.text({
 				x:closeRect.x+(closeRect.size/2),
 				y:closeRect.y+(closeRect.size/2),
 				text:'X'

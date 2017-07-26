@@ -7,7 +7,13 @@
 		<link rel="stylesheet" type="text/css" href="../../engine/css.css?v=1" />
 
 		<!-- Game Engine -->
-		<script src='../../engine/scr_core.js'></script>
+		<!-- Game Engine -->
+		<script src='../../engine/lib/vendor.js'></script>
+		<script src='../../engine/lib/app.js'></script>
+		<script>
+			var initEngine = require('init.js').default
+			initEngine()
+		</script>
 		<!-- Events -->
 		<script src='events/network.js'></script>
 		<!-- Objects -->
@@ -32,33 +38,52 @@
 		<!--Game Area-->
 		<canvas id="view"></canvas>
 		<script>
-			cs.init('view');
+			//Room Setup
+			var room = new cs.Room({
+				width: 800,
+				height: 256,
+				background: '#87cefa'
+			})
+			var camera = new cs.Camera({
+				maxWidth:800,
+				maxHeight:256,
+				lock: true
+			})
+
+			//Initialize the view
+			cs.init('view', room, camera);
 
 			//Load Sprites
-			cs.sprite.load({ path: 'sprites/spr_block' })
-			cs.sprite.load({ path: 'sprites/spr_crate' })
-			cs.sprite.load({ path: 'sprites/spr_inventory' })
-			cs.sprite.load({ path: 'sprites/spr_item_rupee' })
-			cs.sprite.load({ path: 'sprites/spr_player', frames: 2, fwidth:16, fheight:16 })
+			cs.Sprite.addSprites([
+				new cs.Sprite({ path: 'sprites/spr_block' }),
+				new cs.Sprite({ path: 'sprites/spr_crate' }),
+				new cs.Sprite({ path: 'sprites/spr_inventory' }),
+				new cs.Sprite({ path: 'sprites/spr_item_rupee' }),
+				new cs.Sprite({ path: 'sprites/spr_player', frames: 2, fwidth:16, fheight:16 })
+			])
 
 			cs.start = function(){
 				cs.global.networkControl = { id: -1, list: {} }
-				cs.network.connect({ host:'cube-script.net', port:9999, ssl: false })
+				cs.Network.connect({ host:'cube-script.net', port:9999 })
 
-				cs.obj.create({ type: 'obj_light' })
-				cs.obj.create({ type: 'obj_buttons', x:100, y:100 })
-				cs.obj.create({ type: 'obj_crate', x:100, y:0 })
-				cs.obj.create({ type: 'obj_player', x:40, y:40 })
+				cs.Obj.addObjs([
+					new cs.Obj({ type: 'obj_light' }),
+					new cs.Obj({ type: 'obj_buttons', x:100, y:100 }),
+					new cs.Obj({ type: 'obj_crate', x:100, y:0 }),
+					new cs.Obj({ type: 'obj_player', x:40, y:40 })
+				])
 
 				var tx = 0;
 				while(tx < cs.room.width){
-					cs.obj.create({ type:'obj_block', x:tx, y:cs.room.height-16 })
+					cs.Obj.addObj(new cs.Obj({ type:'obj_block', x:tx, y:cs.room.height-16 }))
 					tx += 16
 				}
 
-				cs.obj.create({ type: 'obj_joystick', x:100, y:100 })
-				cs.obj.create({ type: 'obj_inventory', x:100, y:100 })
-				cs.obj.create({ type: 'obj_fire', x:150, y:375 })
+				cs.Obj.addObjs([
+					new cs.Obj({ type: 'obj_joystick', x:100, y:100 }),
+					new cs.Obj({ type: 'obj_inventory', x:100, y:100 }),
+					new cs.Obj({ type: 'obj_fire', x:150, y:375 })
+				])
 			}
 		</script>
 	</body>

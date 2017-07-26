@@ -27,7 +27,7 @@ cs.objects['obj_fire'] = {
 		}`);
 	},
 	step: function(){
-	    cs.particle.burst(this.x, this.y, 16, 16, -5);
-	    cs.particle.step();
+	    cs.Particle.burst(this.x, this.y, 16, 16, -5);
+	    cs.Particle.step();
 	}
 }
