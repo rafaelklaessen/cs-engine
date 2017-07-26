@@ -33,9 +33,9 @@ cs.objects['obj_bird'] = {
 		if(this.vspeed > 0){
 			angle = 75 * (this.vspeed/4);
 		}
-		cs.particle.step();
+		cs.Particle.step();
 		var spr = (this.vspeed > 0) ? 'bird2' : 'bird2'
-		cs.draw.sprite({ spr:spr, x:this.x, y:this.y, angle:angle})
+		cs.Draw.sprite({ spr:spr, x:this.x, y:this.y, angle:angle})
 
 		cs.camera.follow(this);
       if(cs.save.state == 'PLAYING'){
@@ -58,15 +58,15 @@ cs.objects['obj_bird'] = {
 		//Check for touch
 		if(cs.global.flap){
 			this.vspeed = -5;
-			cs.sound.getSound('flap').play()
+			cs.Sound.getSound('flap').play()
 			cs.global.flap = false;
 			if(this.diving > 24){
 				cs.global.score += 1;
-				cs.obj.addObj(
+				cs.Obj.addObj(
 					new cs.Obj({ type:'obj_score_text', x:this.x, y:this.y })
 				)
-				cs.particle.burst(this.x, this.y, this.width, 0, 10);
-				cs.sound.getSound('score').play()
+				cs.Particle.burst(this.x, this.y, this.width, 0, 10);
+				cs.Sound.getSound('score').play()
 			}
 			this.diving = 0;
 		}
@@ -80,13 +80,13 @@ cs.objects['obj_bird'] = {
 				this.timer = 120;
 				var space = 40;
 				var roomCenterVertical = cs.room.height/2;
-				var randomY = roomCenterVertical - cs.math.iRandomRange(-80, 80);
+				var randomY = roomCenterVertical - cs.Math.iRandomRange(-80, 80);
 				var down = new cs.Obj({ type:'obj_pipe', x:cs.room.width, y:randomY-space })
-				cs.obj.addObj(down)
+				cs.Obj.addObj(down)
 				down.y -= down.height; down.pipe = 'down';
 				var up = new cs.Obj({ type:'obj_pipe', x:cs.room.width, y:randomY+space })
-				cs.obj.addObj(up)
-				cs.obj.addObj(
+				cs.Obj.addObj(up)
+				cs.Obj.addObj(
 					new cs.Obj({
 						type: 'obj_score',
 						x: cs.room.width+down.width,
@@ -104,9 +104,9 @@ cs.objects['obj_bird'] = {
 			cs.save.state = 'WRECKED';
 		}
 		if(collisionScore){
-			cs.obj.destroy(collisionScore);
+			cs.Obj.destroy(collisionScore);
 			cs.global.score += 1;
-			cs.sound.getSound('score').play()
+			cs.Sound.getSound('score').play()
 		}
 	}
 }

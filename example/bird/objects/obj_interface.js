@@ -5,20 +5,20 @@ cs.objects['obj_interface'] = {
 	   this.height = 30;
 	   this.backgroundPlaying = undefined;
 		this.surface = 'gui'
-		cs.sound.toggleMute(true)
+		cs.Sound.toggleMute(true)
 	},
 	step: function(){
         //Handling Touch
-        this.touch.check({ x:0, y:0, width:cs.draw.canvas.width, height:cs.draw.canvas.height})
+        this.touch.check({ x:0, y:0, width:cs.Draw.canvas.width, height:cs.Draw.canvas.height})
         //Sound
         if(this.touch.down && this.touch.within({ x:0, y:0, width:14*3, height: 14*3})){
-            cs.sound.toggleMute(!cs.sound.mute)
+            cs.Sound.toggleMute(!cs.Sound.mute)
             return;
         }
         var soundSprite = 'sound_on';
-        if(cs.sound.mute)
+        if(cs.Sound.mute)
             soundSprite = 'sound_off';
-				cs.draw.sprite({
+				cs.Draw.sprite({
 					spr: soundSprite,
 					x: 0, y: 0,
 					scale: 3 })
@@ -27,7 +27,7 @@ cs.objects['obj_interface'] = {
 		  var btnHeightMin = 50;
 		  var btnSpace = 20;
 		  var bw = 300;
-		  var bx = cs.draw.canvas.width/2-bw/2
+		  var bx = cs.Draw.canvas.width/2-bw/2
 
         switch(cs.save.state){
             case 'START':
@@ -37,7 +37,7 @@ cs.objects['obj_interface'] = {
                break;
             case 'TAPTOFLAP':
                if(!this.backgroundPlaying)
-            		this.backgroundPlaying = cs.sound.getSound('background').play({ loop: true });
+            		this.backgroundPlaying = cs.Sound.getSound('background').play({ loop: true });
 					cs.script.interface.drawButtons(['Tap to flap!', 'Your Best Score: ' + cs.save.topScore])
                 if(this.touch.down){
                     cs.save.state = 'PLAYING'
@@ -47,23 +47,23 @@ cs.objects['obj_interface'] = {
 
             case 'PLAYING':
 					var text = 'Score: ' + cs.global.score;
-					cs.draw.setFont("20px Arial")
-					var tw = cs.draw.textSize(text).width;
-					cs.draw.setAlpha(0.5);
-					var rect = { x: cs.draw.canvas.width-100, y: 0, width:100, height:60 }
-					cs.draw.fillRect(rect);
-					cs.draw.strokeRect(rect);
-					cs.draw.setColor('#FFFFFF');
-					cs.draw.setFont("20px Arial")
-					cs.draw.text({
-						x: cs.draw.canvas.width - tw-10,
+					cs.Draw.setFont("20px Arial")
+					var tw = cs.Draw.textSize(text).width;
+					cs.Draw.setAlpha(0.5);
+					var rect = { x: cs.Draw.canvas.width-100, y: 0, width:100, height:60 }
+					cs.Draw.fillRect(rect);
+					cs.Draw.strokeRect(rect);
+					cs.Draw.setColor('#FFFFFF');
+					cs.Draw.setFont("20px Arial")
+					cs.Draw.text({
+						x: cs.Draw.canvas.width - tw-10,
 						y: this.y+5,
 						text: 'Score: ' + cs.global.score
 					})
-					cs.draw.setColor('#FFFFFF');
-					cs.draw.setFont("20px Arial")
-					cs.draw.text({
-						x: cs.draw.canvas.width - tw-10,
+					cs.Draw.setColor('#FFFFFF');
+					cs.Draw.setFont("20px Arial")
+					cs.Draw.text({
+						x: cs.Draw.canvas.width - tw-10,
 						y: this.y+30,
 						text: 'Best: ' + cs.save.topScore
 					})

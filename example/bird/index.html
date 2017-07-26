@@ -7,7 +7,13 @@
 		<link rel="stylesheet" type="text/css" href="../../engine/css.css?v=1" />
 
 		<!-- Game Engine -->
-		<script src='../../engine/scr_core.js'></script>
+		<script src='../../engine/lib/vendor.js'></script>
+		<script src='../../engine/lib/app.js'></script>
+		<script>
+			var initEngine = require('init.js').default
+			initEngine()
+		</script>
+
 		<!-- My Objects -->
 		<script src='objects/obj_bird.js'></script>
 		<script src='objects/obj_pipe.js'></script>
@@ -40,7 +46,7 @@
 			cs.init('view', room, camera);
 
 			//Load Sprites
-			cs.sprite.addSprites([
+			cs.Sprite.addSprites([
 				new cs.Sprite({ path:'sprites/bird', xoff:8, yoff:7}),
 				new cs.Sprite({ path:'sprites/bird2', xoff:8, yoff:7}),
 				new cs.Sprite({ path:'sprites/pipe_down' }),
@@ -56,7 +62,7 @@
 			])
 
 			//Load Sounds
-			cs.sound.addSounds([
+			cs.Sound.addSounds([
 				new cs.Sound({path:'sounds/flap'}),
 				new cs.Sound({path:'sounds/background'}),
 				new cs.Sound({path:'sounds/score'})
@@ -74,7 +80,7 @@
                speed: 1
             }
 
-				cs.obj.addObjs([
+				cs.Obj.addObjs([
 					new cs.Obj({ type:'obj_bird', x:(cs.room.width/2), y:cs.room.height/2 }),
 					new cs.Obj({ type:'obj_interface' }),
 					new cs.Obj({ type:'obj_background'})

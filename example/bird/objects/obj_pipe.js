@@ -7,7 +7,7 @@ cs.objects['obj_pipe'] = {
 		this.hspeed = cs.global.speed;
 	},
 	step: function(){
-		cs.draw.sprite({ spr:'pipe_'+this.pipe, x:this.x, y:this.y});
+		cs.Draw.sprite({ spr:'pipe_'+this.pipe, x:this.x, y:this.y});
 		if(cs.save.state == 'WRECKED') return;
 
 		this.x -= this.hspeed;

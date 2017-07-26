@@ -12,7 +12,7 @@ cs.objects['obj_score'] = {
 cs.objects['obj_score_text'] = {
 	zIndex: 10,
 	create: function(){
-		this.text = cs.math.choose([
+		this.text = cs.Math.choose([
 			'+1 Nice dive!',
 			'+1 Daredevil!',
 			'+1 Dangerous!',
@@ -25,12 +25,12 @@ cs.objects['obj_score_text'] = {
 		this.x -= cs.global.speed;
 		this.timer -= 1;
 
-		cs.draw.setTextCenter();
-		cs.draw.setColor('#FFFFFF');
-		cs.draw.text({ x:this.x, y:this.y, text:this.text })
+		cs.Draw.setTextCenter();
+		cs.Draw.setColor('#FFFFFF');
+		cs.Draw.text({ x:this.x, y:this.y, text:this.text })
 
 		if(this.timer == 0){
-			cs.obj.destroy(this);
+			cs.Obj.destroy(this);
 		}
 	}
 }

@@ -6,17 +6,17 @@ cs.objects['obj_background'] = {
 		this.timer -= 1;
 		if(this.timer == -1){
 			for(var i = 0; i < 10; i++){
-				cs.obj.addObj(
-				 	new cs.Obj({ type: 'obj_bgPart', x:cs.math.iRandomRange(0, cs.room.width), y:0 })
+				cs.Obj.addObj(
+				 	new cs.Obj({ type: 'obj_bgPart', x:cs.Math.iRandomRange(0, cs.room.width), y:0 })
 			 	)
 			}
 			this.timer = 0;
 		}
 		if(this.timer == 0){
-			cs.obj.addObj(
+			cs.Obj.addObj(
 				new cs.Obj({ type:'obj_bgPart', x:cs.room.width, y:0 })
 			)
-			this.timer = cs.math.iRandomRange(40, 120);
+			this.timer = cs.Math.iRandomRange(40, 120);
 		}
 	}
 }
@@ -25,20 +25,20 @@ cs.objects['obj_bgPart'] = {
 	zIndex: 10,
 	create: function(){
 		this.timer = 600;
-		this.bgType = cs.math.choose(['mountain', 'cloud']);
+		this.bgType = cs.Math.choose(['mountain', 'cloud']);
 
-		cs.script.setSprite(this, cs.math.choose([
+		cs.script.setSprite(this, cs.Math.choose([
 			'cloud1',
 			'cloud2',
 			'cloud3'
 		]));
 
 		//Cloud
-		this.y = cs.math.iRandomRange(0, cs.room.height-this.height*2);
-		this.hspeed = cs.global.speed+cs.math.choose([0, 1]);
+		this.y = cs.Math.iRandomRange(0, cs.room.height-this.height*2);
+		this.hspeed = cs.global.speed+cs.Math.choose([0, 1]);
 		//Mountain
 		if(this.bgType == 'mountain'){
-			cs.script.setSprite(this,cs.math.choose([
+			cs.script.setSprite(this,cs.Math.choose([
 				'mountain1',
 				'mountain2'
 			]));
@@ -51,9 +51,9 @@ cs.objects['obj_bgPart'] = {
 			this.x -= this.hspeed;
 
 		if(this.x < -this.width){
-			cs.obj.destroy(this);
+			cs.Obj.destroy(this);
 		}
 
-		cs.draw.sprite({ spr:this.sprite, x:this.x, y:this.y });
+		cs.Draw.sprite({ spr:this.sprite, x:this.x, y:this.y });
 	}
 }
