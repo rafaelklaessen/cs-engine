@@ -115,7 +115,7 @@ export default class Touch {
                this.x = touch.x
                this.y = touch.y
                if (!Draw.raw) {
-                  const convert = this.convertToGameCords(this.x, this.y)
+                  const convert = Touch.convertToGameCords(this.x, this.y)
                   this.x = convert.x
                   this.y = convert.y
                }

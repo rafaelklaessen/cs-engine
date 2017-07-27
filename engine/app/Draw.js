@@ -51,6 +51,14 @@ export default class Draw {
       ctx.imageSmoothingEnabled = false
    }
 
+   static setSurfaceOrder(surfaceOrder) {
+      this.surfaceOrder = surfaceOrder
+   }
+
+   static getSurfaceOrder() {
+      return this.surfaceOrder
+   }
+
    /**
     * Draw.getCanvas
     * @return {HTMLCanvasElement}
@@ -80,26 +88,10 @@ export default class Draw {
       const surface = new Surface(info)
 
       this.surfaces[surface.getName()] = surface
-      this.addSurfaceOrder(surface)
+      surface.addToSurfaceOrder()
       this.resize()
 
       return surface
-   }
-
-   /**
-    * Draw.addSurfaceOrder
-    * Adds surface to surface order
-    * @param {Surface} surface Surface to add
-    */
-   static addSurfaceOrder(surface) {
-      // Find Place to put it!
-      let i = 0
-      for (i = 0; i < this.surfaceOrder.length; i++) {
-         if (this.surfaceOrder[i].getZIndex() <= surface.getZIndex())
-            break
-      }
-
-      this.surfaceOrder.splice(i, 0, surface)
    }
 
    /**
@@ -125,17 +117,6 @@ export default class Draw {
    }
 
    /**
-    * Draw.clearSurface
-    * Calls the clear method with given options on the surface specified
-    * in options
-    * @param {object} options Clear options
-    */
-   static clearSurface(options) {
-      const surface = this.getSurface([options.name])
-      surface.clear(options)
-   }
-
-   /**
     * Draw.displaySurfaces
     * Displays all surfaces in surfaceOrder by calling the display method
     * on them
@@ -145,16 +126,6 @@ export default class Draw {
       while (i--) {
          this.surfaceOrder[i].display()
       }
-   }
-
-   /**
-    * Draw.displaySurface
-    * Displays given surface by calling its display method
-    * @param {string} surfaceName Name of the surface to display
-    */
-   static displaySurface(surfaceName) {
-      const surface = this.getSurface(surfaceName)
-      surface.display()
    }
 
    /**

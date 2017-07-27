@@ -104,7 +104,7 @@ cs.objects['obj_bird'] = {
 			cs.save.state = 'WRECKED';
 		}
 		if(collisionScore){
-			cs.Obj.destroy(collisionScore);
+			collisionScore.destroy()
 			cs.global.score += 1;
 			cs.Sound.getSound('score').play()
 		}

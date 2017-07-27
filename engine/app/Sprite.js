@@ -50,7 +50,7 @@ export default class Sprite {
             }
          }
 
-         for (let surface of Draw.surfaceOrder) {
+         for (let surface of Draw.getSurfaceOrder()) {
             surface.setClear(false)
          }
 
@@ -137,27 +137,6 @@ export default class Sprite {
    draw(options) {
       options.spr = this.name
       Draw.sprite(options)
-   }
-
-   /**
-    * Sprite.texture
-    * Calls the texture method on given sprite
-    * @param {string} spriteName
-    * @param {Number} width
-    * @param {Number} height
-    */
-   static texture(spriteName, width, height) {
-      this.getSprite(options.spr).texture(width, height)
-   }
-
-   /**
-    * Sprite.info
-    * Calls the info method on given sprite
-    * @param {object} options
-    * @deprecated
-    */
-   static info(options) {
-      return this.getSprite(options.spr).getInfo(options)
    }
 
    /**

@@ -1,3 +1,5 @@
+import Draw from './Draw'
+
 export default class Surface {
    constructor(options) {
       this.name = options.name
@@ -90,6 +92,23 @@ export default class Surface {
       this.canvas.height = this.raw ? height : cs.room.getHeight()
       this.ctx.putImageData(img, 0, 0)
       this.ctxImageSmoothing()
+   }
+
+   /**
+    * Surface.addToSurfaceOrder
+    * Adds current surface to surface order
+    */
+   addToSurfaceOrder() {
+      const surfaceOrder = Draw.getSurfaceOrder().slice(0)
+
+      // Find Place to put it!
+      let i = 0
+      for (i = 0; i < surfaceOrder.length; i++) {
+         if (surfaceOrder[i].getZIndex() <= this.zIndex) break
+      }
+
+      surfaceOrder.splice(i, 0, this)
+      Draw.setSurfaceOrder(surfaceOrder)
    }
 
    /**

@@ -81,20 +81,13 @@ export default class Obj {
    }
 
    /**
-    * Obj.destroy
-    * Destroys given object by calling its destroy method if destroyObj's type
-    * is object, otherwise it destroys all objects matching given id
-    * @param {Any} destroyObj
+    * Obj.destroyById
+    * Destroys all objects in objects list that match given id
+    * @param {Number} id
     */
-   static destroy(destroyObj) {
-      if (typeof destroyObj === 'object') {
-         destroyObj.destroy()
-      } else {
-         for (let obj of this.list) {
-            if (obj.getId() === destroyObj) {
-               obj.destroy()
-            }
-         }
+   static destroyById(id) {
+      for (let obj of this.list) {
+         if (obj.getId() === destroyObj) obj.destroy()
       }
    }
 

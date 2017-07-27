@@ -30,7 +30,7 @@ cs.objects['obj_score_text'] = {
 		cs.Draw.text({ x:this.x, y:this.y, text:this.text })
 
 		if(this.timer == 0){
-			cs.Obj.destroy(this);
+			this.destroy()
 		}
 	}
 }
