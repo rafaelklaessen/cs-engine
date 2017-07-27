@@ -53,7 +53,7 @@ export default class Draw {
 
    /**
     * Draw.getCanvas
-    * @return {HTMLElement}
+    * @return {HTMLCanvasElement}
     */
    static getCanvas() {
       return this.canvas

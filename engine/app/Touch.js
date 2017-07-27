@@ -5,6 +5,11 @@ import Draw from './Draw'
 export default class Touch {
    static list = []
 
+   /**
+    * Touch.add
+    * Adds given touch to touch list
+    * @param {Number} id
+    */
    static add(id) {
       Sound.enable()
       let i = 0
@@ -20,6 +25,11 @@ export default class Touch {
       this.list[i].id = id
    }
 
+   /**
+    * Touch.remove
+    * Removes given touch from touch list
+    * @param {Number} id
+    */
    static remove(id) {
       for (let i = 0; i < this.list.length; i++) {
          if (this.list[i].id == id) {
@@ -30,16 +40,32 @@ export default class Touch {
       }
    }
 
+   /**
+    * Touch.down
+    * @param {TouchEvent} e
+    */
    static down(e) {
       this.add(e.changedTouches[0].identifier)
       this.move(e)
    }
 
+   /**
+    * Touch.up
+    * @param {TouchEvent} e
+    */
    static up(e) {
       const id = e.changedTouches[0].identifier
       this.remove(id)
    }
 
+   /**
+    * Touch.updatePos
+    * Updates position of given touch
+    * @param {Number} id
+    * @param {Number} x
+    * @param {Number} y
+    * @return {object} Updated touch position
+    */
    static updatePos(id, x, y) {
       for (let touch of this.list) {
          if (touch.id == id) {
@@ -50,6 +76,10 @@ export default class Touch {
       }
    }
 
+   /**
+    * Touch.move
+    * @param {TouchEvent} e
+    */
    static move(e) {
       e.preventDefault()
       for (let etouch of e.changedTouches) {
@@ -57,6 +87,11 @@ export default class Touch {
       }
    }
 
+   /**
+    * Touch.create
+    * @param {Any} raw
+    * @return {object}
+    */
    static create(raw) {
       return {
          down: false,
@@ -124,6 +159,10 @@ export default class Touch {
       }
    }
 
+   /**
+    * Touch.reset
+    * Resets all Touch.list entries
+    */
    static reset() {
       for (let i = 0; i < this.list.length; i++) {
          if (this.list[i].down === true) {
@@ -134,6 +173,13 @@ export default class Touch {
       }
    }
 
+   /**
+    * Touch.convertToGameCords
+    * Converts given coord to gamecoord
+    * @param {Number} x
+    * @param {Number} y
+    * @return {object} Object containing gamecoord
+    */
    static convertToGameCords(x, y) {
       const rect = cs.view.getBoundingClientRect()
 

@@ -23,7 +23,7 @@ export default class CSMath {
    /**
     * CSMath.choose
     * Selects a random element of given array
-    * @param {Array} array Array to get random element from
+    * @param {Array.<Any>} array Array to get random element from
     * @return {Any} The random array element
     */
    static choose(array) {

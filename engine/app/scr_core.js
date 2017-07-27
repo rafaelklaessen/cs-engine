@@ -24,6 +24,13 @@ export default class cs {
       return this._loading
    }
 
+   /**
+    * sc.init
+    * Inits the engine
+    * @param {string} canvasId
+    * @param {Room} room
+    * @param {Camera} camera
+    */
    static init(canvasId, room, camera) {
       // Listen for Errors
       window.onerror = (errorMsg, url, lineNumber) => Loop.stop()

@@ -13,6 +13,14 @@ export default class Particle {
       this.obj = obj
    }
 
+   /**
+    * Particle.burst
+    * @param {Number} x
+    * @param {Number} y
+    * @param {Number} w Width
+    * @param {Number} h Height
+    * @param {Number} qty Quantity
+    */
    static burst(x, y, w, h, qty) {
       if (typeof qty == 'undefined') qty = 0
       let num = qty
@@ -64,6 +72,9 @@ export default class Particle {
       }
    }
 
+   /**
+    * Particle.step
+    */
    static step() {
       const tempParticles = []
       for (let i = 0; i < this.obj.particle.list.length; i++) {
@@ -133,6 +144,12 @@ export default class Particle {
       this.obj.particle.list = tempParticles
    }
 
+   /**
+    * Particle.rgbFromHex
+    * Converts given hex to rgb
+    * @param {string} hex
+    * @return {object} Contains the r, g and b values
+    */
    static rgbFromHex(hex) {
       return {
          r: parseInt(`0x${hex.slice(1, 3)}`),
@@ -141,6 +158,14 @@ export default class Particle {
       }
    }
 
+   /**
+    * Particle.hexFromRgb
+    * Converts given rgb to hex
+    * @param {Number} r
+    * @param {Number} g
+    * @param {Number} b
+    * @return {string}
+    */
    static hexFromRgb(r, g, b) {
       r = r.toString(16)
       g = g.toString(16)

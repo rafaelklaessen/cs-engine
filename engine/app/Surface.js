@@ -42,6 +42,10 @@ export default class Surface {
       }
    }
 
+   /**
+    * Surface.display
+    * Displays the current surface
+    */
    display() {
       let sx = this.raw ? 0 : cs.camera.getX()
       let sy = this.raw ? 0 : cs.camera.getY()

@@ -9,6 +9,10 @@ import Touch from './Touch'
 export default class Loop {
    static run = true
 
+   /**
+    * Loop.step
+    * Updates the game
+    */
    static step() {
       if (this.run) {
          setTimeout(() => Loop.step(), 1000 / 60)
@@ -44,6 +48,10 @@ export default class Loop {
       }
    }
 
+   /**
+    * Loop.stop
+    * Stops the loop
+    */
    static stop() {
       this.run = false
    }

@@ -51,7 +51,7 @@ export default class Sprite {
          }
 
          for (let surface of Draw.surfaceOrder) {
-            surface.clear = false
+            surface.setClear(false)
          }
 
          // Sprites Loaded Start Engine
@@ -66,6 +66,12 @@ export default class Sprite {
    getXoff = () => this.img.xoff
    getYoff = () => this.img.yoff
 
+   /**
+    * Sprite.texture
+    * Draws texture to sprite
+    * @param {Number} width
+    * @param {Number} height
+    */
    texture(width, height) {
       this.img.frames[0].width = width
       this.img.frames[0].height = height
@@ -83,6 +89,12 @@ export default class Sprite {
       }
    }
 
+   /**
+    * Sprite.getInfo
+    * Gets current sprite info based on options
+    * @param {object} options
+    * @return {object} The current sprite's info
+    */
    getInfo(options) {
       // We need something to return info on sprites based on scale etc
       if (typeof options.frame == 'undefined') options.frame = 0
@@ -117,27 +129,61 @@ export default class Sprite {
       }
    }
 
+   /**
+    * Sprite.draw
+    * Draws current sprite based on options using Draw.sprite
+    * @param {object} options Options for drawing the sprite
+    */
    draw(options) {
-      options.spr = this.getName()
+      options.spr = this.name
       Draw.sprite(options)
    }
 
+   /**
+    * Sprite.texture
+    * Calls the texture method on given sprite
+    * @param {string} spriteName
+    * @param {Number} width
+    * @param {Number} height
+    */
    static texture(spriteName, width, height) {
-      this.list[options.spr].texture(width, height)
+      this.getSprite(options.spr).texture(width, height)
    }
 
+   /**
+    * Sprite.info
+    * Calls the info method on given sprite
+    * @param {object} options
+    * @deprecated
+    */
    static info(options) {
-      return this.list[options.spr].getInfo(options)
+      return this.getSprite(options.spr).getInfo(options)
    }
 
+   /**
+    * Sprite.getSprite
+    * Gets given sprite by name from sprite list
+    * @param {string} spriteName
+    * @return {Sprite} The sprite
+    */
    static getSprite(spriteName) {
       return this.list[spriteName]
    }
 
+   /**
+    * Sprite.addSprite
+    * Adds given sprite to sprite list
+    * @param {Sprite} sprite Sprite to add
+    */
    static addSprite(sprite) {
       this.list[sprite.getName()] = sprite
    }
 
+   /**
+    * Sprite.addSprites
+    * Adds an array of sprites to sprite list
+    * @param {Array.<Sprite>} spriteArr Array of sprites to add
+    */
    static addSprites(spriteArr) {
       for (let sprite of spriteArr) {
          this.addSprite(sprite)

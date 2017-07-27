@@ -50,6 +50,10 @@ export default class Obj {
    getWidth = () => this.width
    getHeight = () => this.height
 
+   /**
+    * Obj.destroy
+    * Destroys given object
+    */
    destroy() {
       const type = this.type
       this.live = false
@@ -57,17 +61,31 @@ export default class Obj {
       Obj.objGroups[type] = Obj.objGroups[type].filter((obj) => obj.getLive())
    }
 
+   /**
+    * Obj.addObj
+    * Adds given object to object list
+    * @param {Obj} obj
+    */
    static addObj(obj) {
       const pos = this.findPosition(obj.getZIndex())
       this.list.splice(pos, 0, obj)
    }
 
+   /**
+    * Obj.addObjs
+    * Adds an array of objects to object list
+    * @param {Array.<Obj>} objArr
+    */
    static addObjs(objArr) {
-      for (let obj of objArr) {
-         this.addObj(obj)
-      }
+      for (let obj of objArr) this.addObj(obj)
    }
 
+   /**
+    * Obj.destroy
+    * Destroys given object by calling its destroy method if destroyObj's type
+    * is object, otherwise it destroys all objects matching given id
+    * @param {Any} destroyObj
+    */
    static destroy(destroyObj) {
       if (typeof destroyObj === 'object') {
          destroyObj.destroy()
@@ -80,6 +98,12 @@ export default class Obj {
       }
    }
 
+   /**
+    * Obj.findPosition
+    * Finds the position where and object should be placed based on zIndex
+    * @param {Number} zIndex
+    * @return {Number}
+    */
    static findPosition(zIndex) {
       let i = 0
       for (i = 0; i < this.list.length; i++) {
@@ -88,25 +112,57 @@ export default class Obj {
       return i
    }
 
+   /**
+    * Obj.all
+    * Gets all live objects by given type from object list
+    * @param {string} type
+    * @return {Array.<Obj>}
+    */
    static all(type) {
       return this.list.filter((obj) =>
          (obj.getType() == type && obj.getLive())
       )
    }
 
+   /**
+    * Obj.find
+    * Finds live object by given type in object list
+    * @param {string} type
+    * @return {Obj}
+    */
    static find(type) {
       return this.list.find((obj) =>
          (obj.getType() == type && obj.getLive())
       )
    }
 
+   /**
+    * Obj.count
+    * Counts all object that match given type
+    * @param {string} type
+    * @return {Number}
+    */
    static count(type) {
       return this.objGroups[type]
          ? this.objGroups[type].length
          : 0
    }
 
+   /**
+    * Obj.registerObj
+    * Registers given object to cs.objects
+    * @param {string} name
+    * @param {object} obj
+    */
    static registerObj(name, obj) {
       cs.objects[name] = obj
+   }
+
+   /**
+    * Obj.reset
+    * Resets object list
+    */
+   static reset() {
+      this.list = []
    }
 }

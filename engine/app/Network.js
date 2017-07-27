@@ -2,6 +2,11 @@ export default class Network {
    static ws = {}
    static status = false
 
+   /**
+    * Network.connect
+    * Connects to websocket based on options
+    * @param {object} options
+    */
    static connect(options) {
       const host = options.host || window.location.host
 
@@ -26,6 +31,7 @@ export default class Network {
       this.ws.send(data)
    }
 
+   // These methods should be overriden by user
    static onconnect() {}
    static ondisconnect() {}
    static onmessage() {}

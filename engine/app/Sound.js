@@ -39,6 +39,12 @@ export default class Sound {
 
    getName = () => this.name
 
+   /**
+    * Sound.play
+    * Plays current sound and applies given options to the buffer source
+    * @param {object} options
+    * @return {?AudioBufferSourceNode} The audio buffer source
+    */
    play(options) {
       if (this['wav'].loaded === true) {
          Sound.playList.forEach((audioObj) => {
@@ -61,6 +67,10 @@ export default class Sound {
       return undefined
    }
 
+   /**
+    * Sound.enable
+    * Enables sound
+    */
    static enable() {
       if (this.canPlayAudio === true || !this.context) return
 
@@ -71,6 +81,10 @@ export default class Sound {
       this.canPlayAudio = true
    }
 
+   /**
+    * Sound.init
+    * Inits sound (by setting an audio context)
+    */
    static init() {
       this.list = {}
       try {
@@ -84,20 +98,39 @@ export default class Sound {
       }
    }
 
+   /**
+    * Sound.getSound
+    * Gets given sound by name from sound list
+    * @param {string} name
+    * @return {Sound} The sound
+    */
    static getSound(name) {
       return this.list[name]
    }
 
+   /**
+    * Sound.addSound
+    * Adds given sound to sound list
+    * @param {Sound} sound
+    */
    static addSound(sound) {
       this.list[sound.getName()] = sound
    }
 
+   /**
+    * Sound.addSounds
+    * Adds an array of sounds to sound list
+    * @param {Array.<Sound>} soundArr
+    */
    static addSounds(soundArr) {
       for (let sound of soundArr) {
          this.addSound(sound)
       }
    }
 
+   /**
+    * Sound.reset
+    */
    static reset() {
       for (var sound in this.playList) {
          // TODO there is an error here take a look in a second I got to go wash my cloths~!!!
@@ -107,20 +140,34 @@ export default class Sound {
       }
    }
 
-   static toggleMute(bool) {
-      this.mute = bool;
-      (bool) ? this.setGain(0) : this.setGain(1)
+   /**
+    * Sound.toggleMute
+    * Toggles mute status
+    * @param {boolean} mute Whether sound is muted or not
+    */
+   static toggleMute(mute) {
+      this.mute = mute;
+      (mute) ? this.setGain(0) : this.setGain(1)
    }
 
+   /**
+    * Sound.setGain
+    * @param {Number} gainValue
+    */
    static setGain(gainValue) {
-      for (var audioObj in this.playList) {
+      for (let audioObj in this.playList) {
          this.playList[audioObj].gainNode.gain.value = gainValue
       }
    }
 
-   static toggleActive(bool) {
+   /**
+    * Sound.toggleActive
+    * Toggles active status
+    * @param {boolean} active
+    */
+   static toggleActive(active) {
       if (this.context !== undefined) {
-         (bool) ? this.context.resume() : this.context.suspend()
+         (active) ? this.context.resume() : this.context.suspend()
       }
    }
 }

@@ -6,7 +6,7 @@ export default class Storage {
     * Gets file (JSON) from name (and group if a groupName is provided) from
     * Storage class
     * @param {string} name
-    * @param {?string} groupName
+    * @param {string=} groupName
     * @return {?object} The file (JSON)
     */
    get(name, groupName) {
@@ -85,7 +85,7 @@ export default class Storage {
     * Storage.cache
     * Caches given file (JSON) to localStorage (under group if a group is provided)
     * @param {string} name
-    * @param {?string} groupName
+    * @param {string=} groupName
     */
    static cache(name, groupName) {
       if (groupName) {
@@ -104,6 +104,7 @@ export default class Storage {
    /**
     * Storage.cacheGroup
     * Caches whole group to storage
+    * @param {string} groupName
     */
    static cacheGroup(groupName) {
       if (!this[groupName]) return

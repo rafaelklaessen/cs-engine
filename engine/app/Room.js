@@ -21,18 +21,32 @@ export default class Room {
    getHeight = () => this.height
    setRestarting = (restarting) => this.restarting = restarting
 
+   /**
+    * Room.restart
+    * Sets room to be restarting
+    */
    restart() {
       this.restarting = true
    }
 
+   /**
+    * Room.reset
+    * Resets room and object list
+    */
    reset() {
-      Obj.list = []
+      Obj.reset()
       cs.global = {}
       cs.start()
       Sound.reset()
       this.restarting = false
    }
 
+   /**
+    * Room.outside
+    * Checks whether given rect is outside the room or not
+    * @param {object} rect
+    * @return {boolean} Wether rect is outside room or not
+    */
    outside(rect) {
       if (typeof rect.width == 'undefined') rect.width = 0
       if (typeof rect.height == 'undefined') rect.height = 0
