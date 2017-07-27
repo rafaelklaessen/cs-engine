@@ -28,6 +28,11 @@ export default class Surface {
    setClear = (clear) => this.clear = clear
    getClear = () => this.clear
 
+   /**
+    * Surface.clear
+    * Sets a clearRequest on the current surface based on options
+    * @param {object} options Contains data like eg x and y. All fields are optional
+    */
    clear(options) {
       this.clearRequest = {
          x: options.x || 0,
@@ -69,6 +74,12 @@ export default class Surface {
          dx, dy, dWidth, dHeight)
    }
 
+   /**
+    * Surface.resize
+    * Resizes the current surface
+    * @param {Number} width
+    * @param {Number} height
+    */
    resize(width, height) {
       const img = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height)
       this.canvas.width = this.raw ? width : cs.room.getWidth()
@@ -77,6 +88,10 @@ export default class Surface {
       this.ctxImageSmoothing()
    }
 
+   /**
+    * Surface.ctxImageSmoothing
+    * Disables image smoothing on the current surface
+    */
    ctxImageSmoothing() {
       this.ctx.webkitImageSmoothingEnabled = false
       this.ctx.mozImageSmoothingEnabled = false

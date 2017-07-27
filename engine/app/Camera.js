@@ -34,6 +34,11 @@ export default class Camera {
    setMaxHeight = (maxHeight) => this.maxHeight = maxHeight
    getMaxHeight = () => this.maxHeight
 
+   /**
+    * Camera.follow
+    * Makes camera follow given object
+    * @param {Obj} obj Object to follow
+    */
    follow(obj) {
       this.followX = obj.getX()
       this.followY = obj.getY()
@@ -41,6 +46,10 @@ export default class Camera {
       this.followHeight = obj.getHeight()
    }
 
+   /**
+    * Camera.update
+    * Updates camera position
+    */
    update() {
       this.x = (this.followX + this.followWidth / 2) - this.width / 2
       this.y = (this.followY + this.followHeight / 2) - this.height / 2
@@ -57,6 +66,12 @@ export default class Camera {
       }
    }
 
+   /**
+    * Camera.zoomOut
+    */
    zoomOut() {}
+   /**
+    * Camera.zoomIn
+    */
    zoomIn() {}
 }

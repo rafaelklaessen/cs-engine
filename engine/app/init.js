@@ -14,8 +14,10 @@ import Room from './Room'
 import Sound from './Sound'
 import Sprite from './Sprite'
 import Storage from './Storage'
+import Surface from './Surface'
 import Touch from './Touch'
 
+// Inits the engine by binding all classes to the window object
 export default function initEngine() {
    window.cs = cs
    window.cs.Camera = Camera
@@ -33,5 +35,6 @@ export default function initEngine() {
    window.cs.Sound = Sound
    window.cs.Sprite = Sprite
    window.cs.Storage = Storage
+   window.cs.Surface = Surface
    window.cs.Touch = Touch
 }

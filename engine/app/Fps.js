@@ -3,6 +3,10 @@ export default class Fps {
    static frame = 0
    static check = Date.now()
 
+   /**
+    * Fps.update
+    * Updates the fps data
+    */
    static update() {
       if (Date.now() - this.check > 1000) {
          this.check = Date.now()

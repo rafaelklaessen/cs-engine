@@ -28,6 +28,10 @@ export default class Draw {
    static h = 0
    static o = 0
 
+   /**
+    * Draw.debugReset
+    * Resets debug data
+    */
    static debugReset() {
       this.debug = {
          skippedSprited: 0,
@@ -35,6 +39,11 @@ export default class Draw {
       }
    }
 
+   /**
+    * Draw.ctxImageSmoothing
+    * Disables image smoothing on given canvas context
+    * @param {CanvasRenderingContext2D} ctx Canvas context to disable image smooting on
+    */
    static ctxImageSmoothing(ctx) {
       ctx.webkitImageSmoothingEnabled = false
       ctx.mozImageSmoothingEnabled = false
@@ -42,14 +51,31 @@ export default class Draw {
       ctx.imageSmoothingEnabled = false
    }
 
+   /**
+    * Draw.getCanvas
+    * @return {HTMLElement}
+    */
    static getCanvas() {
       return this.canvas
    }
 
+   /**
+    * Draw.getSurface
+    * Gets given surface from surface list
+    * @param {string} surfaceName The name of the surface
+    * @return {Surface} The surface from the surface list
+    */
    static getSurface(surfaceName) {
       return this.surfaces[surfaceName]
    }
 
+   /**
+    * Draw.createSurface
+    * Creates surface from given info and adds it to the surface list
+    * and surface order
+    * @param {object} info The surface options
+    * @return {Surface} The created surface
+    */
    static createSurface(info) {
       const surface = new Surface(info)
 
@@ -60,6 +86,11 @@ export default class Draw {
       return surface
    }
 
+   /**
+    * Draw.addSurfaceOrder
+    * Adds surface to surface order
+    * @param {Surface} surface Surface to add
+    */
    static addSurfaceOrder(surface) {
       // Find Place to put it!
       let i = 0
@@ -71,6 +102,10 @@ export default class Draw {
       this.surfaceOrder.splice(i, 0, surface)
    }
 
+   /**
+    * Draw.clearSurfaces
+    * Clears all surfaces that have autoclear enabled or have a clear request
+    */
    static clearSurfaces() {
       cs.view.ctx.clearRect(0, 0, cs.view.width, cs.view.height)
       for (let surface of this.surfaceOrder) {
@@ -89,11 +124,22 @@ export default class Draw {
       }
    }
 
+   /**
+    * Draw.clearSurface
+    * Calls the clear method with given options on the surface specified
+    * in options
+    * @param {object} options Clear options
+    */
    static clearSurface(options) {
       const surface = this.getSurface([options.name])
       surface.clear(options)
    }
 
+   /**
+    * Draw.displaySurfaces
+    * Displays all surfaces in surfaceOrder by calling the display method
+    * on them
+    */
    static displaySurfaces() {
       let i = this.surfaceOrder.length
       while (i--) {
@@ -101,17 +147,30 @@ export default class Draw {
       }
    }
 
+   /**
+    * Draw.displaySurface
+    * Displays given surface by calling its display method
+    * @param {string} surfaceName Name of the surface to display
+    */
    static displaySurface(surfaceName) {
       const surface = this.getSurface(surfaceName)
       surface.display()
    }
 
+   /**
+    * Draw.resetSurfaces
+    * Sets clear to false on all surfaces in surfaceOrder
+    */
    static resetSurfaces() {
       for (let surface of this.surfaceOrder) {
          surface.setClear(false)
       }
    }
 
+   /**
+    * Draw.checkResize
+    * Calls Draw.resize and Input.resize if the screen size changed
+    */
    static checkResize() {
       const rect = cs.view.getBoundingClientRect()
       const w = rect.width
@@ -126,6 +185,10 @@ export default class Draw {
       }
    }
 
+   /**
+    * Draw.resize
+    * Resizes cs.view, cs.camera and all surfaces in surfaceOrder
+    */
    static resize() {
       const viewSize = cs.view.getBoundingClientRect()
 
@@ -153,6 +216,11 @@ export default class Draw {
       cs.camera.setScale(w / nw)
    }
 
+   /**
+    * Draw.sprite
+    * Draws given sprite based on options
+    * @param {object} options Options for drawing the sprite (like angle and scale)
+    */
    static sprite(options) {
       const sprite = Sprite.getSprite(options.spr)
       const info = sprite.getInfo(options)
@@ -177,15 +245,31 @@ export default class Draw {
       this.reset()
    }
 
+   /**
+    * Draw.text
+    * Draws a text from given options
+    * @param {object} options Contains the text and its x and y
+    */
    static text(options) {
       this.ctx.fillText(options.text, options.x, options.y)
       this.reset()
    }
 
+   /**
+    * Draw.textSize
+    * Returns the measured size of given text
+    * @param {string} str The text
+    * @return {TextMetrics}
+    */
    static textSize(str) {
       return this.ctx.measureText(str)
    }
 
+   /**
+    * Draw.line
+    * Draws a line based on given options
+    * @param {object} options Contains the two points between which a line should be drawn
+    */
    static line(options) {
       const cx = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
       const cy = 0 - ((this.ctx.lineWidth % 2 == 0) ? 0 : 0.50)
@@ -197,6 +281,11 @@ export default class Draw {
       this.reset()
    }
 
+   /**
+    * Draw.fillRect
+    * Draws given rect as a fillRect
+    * @param {object} args
+    */
    static fillRect(args) {
       if (typeof args.width == 'undefined') args.width = args.size || 0
       if (typeof args.height == 'undefined') args.height = args.size || 0
@@ -205,6 +294,11 @@ export default class Draw {
       this.reset()
    }
 
+   /**
+    * Draw.strokeRect
+    * Draws given rect as a strokeRect
+    * @param {object} args
+    */
    static strokeRect(args) {
       const lineWidth = this.ctx.lineWidth > 1 ? this.ctx.lineWidth : 0
       const lineWidthAdjust = (this.ctx.lineWidth % 2 ? -0.50 : 0) + Math.floor(this.ctx.lineWidth / 2)
@@ -218,6 +312,14 @@ export default class Draw {
       this.reset()
    }
 
+   /**
+    * Draw.circle
+    * Draws a circle
+    * @param {Number} x
+    * @param {Number} y
+    * @param {Number} rad
+    * @param {?boolean} fill
+    */
    static circle(x, y, rad, fill) {
       if (typeof fill == 'undefined') fill = true
       this.ctx.beginPath()
@@ -229,6 +331,15 @@ export default class Draw {
       this.reset()
    }
 
+   /**
+    * Draw.circleGradient
+    * Draws a circle with a gradient
+    * @param {Number} x
+    * @param {Number} y
+    * @param {Number} radius
+    * @param {string} c1 First gradient color
+    * @param {string} c2 Second gradient color
+    */
    static circleGradient(x, y, radius, c1, c2) {
       // Draw a circle
       const g = this.ctx.createRadialGradient(x, y, 0, x, y, radius)
@@ -243,6 +354,11 @@ export default class Draw {
       this.reset()
    }
 
+   /**
+    * Draw.fixPosition
+    * Applies Math.floor on all items in args
+    * @param {object} args
+    */
    static fixPosition(args) {
       const x = Math.floor(args.x)
       const y = Math.floor(args.y)
@@ -298,6 +414,10 @@ export default class Draw {
       this.skip = this.surface.getSkip()
    }
 
+   /**
+    * Draw.reset
+    * Resets all values to defaults
+    */
    static reset() {
       this.setAlpha(1)
       this.setWidth(1)

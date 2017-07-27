@@ -6,10 +6,14 @@ export default class Input {
    static input = undefined
    static button = undefined
 
+   /**
+    * Input.create
+    * Creates form with input and enter button
+    */
    static create() {
       const form = document.createElement('form')
       form.id = 'textInputForm'
-      form.setAttribute('onsubmit', 'cs.input.close() return false')
+      form.setAttribute('onsubmit', 'cs.Input.close() return false')
       form.setAttribute('autocomplete', 'off')
       const input = document.createElement('input')
       input.id = 'textInputText'
@@ -29,6 +33,11 @@ export default class Input {
       this.button = button
    }
 
+   /**
+    * Input.open
+    * Opens form
+    * @param {Number} id
+    */
    static open(id) {
       if (this.form.style.display !== 'block') {
          this.openBy = id
@@ -38,6 +47,11 @@ export default class Input {
       }
    }
 
+   /**
+    * Input.close
+    * Closes form
+    * @return {boolean} false
+    */
    static close() {
       if (this.form.style.display == 'block') {
          this.form.style.display = 'none'
@@ -49,6 +63,10 @@ export default class Input {
       return false
    }
 
+   /**
+    * Input.return
+    * @param {Number} id
+    */
    static return(id) {
       const text = this.text
       if (this.openBy == id && text !== '') {
@@ -58,6 +76,10 @@ export default class Input {
       return ''
    }
 
+   /**
+    * Input.resize
+    * Resizes the form to new window size
+    */
    static resize() {
       const winWidth = window.innerWidth
 
